@@ -11,8 +11,20 @@
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
+    "@types/jsonwebtoken": "^9.0.5",
+    "@types/node": "^20.9.3",
     "nuxt": "^3.8.2",
+    "prisma": "^5.6.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.3.2",
     "vue": "^3.3.8",
     "vue-router": "^4.2.5"
+  },
+  "dependencies": {
+    "@nuxtjs/dotenv": "^1.4.1",
+    "@prisma/client": "^5.6.0",
+    "bcrypt-ts": "^5.0.0",
+    "dotenv": "^16.3.1",
+    "jsonwebtoken": "^9.0.2"
   }
 }
