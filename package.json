@@ -11,9 +11,12 @@
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
+    "@pinia-plugin-persistedstate/nuxt": "^1.2.0",
+    "@pinia/nuxt": "^0.5.1",
     "@types/jsonwebtoken": "^9.0.5",
     "@types/node": "^20.9.3",
     "nuxt": "^3.8.2",
+    "pinia": "^2.1.7",
     "prisma": "^5.6.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.3.2",
