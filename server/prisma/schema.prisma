@@ -1,0 +1,94 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int          @id @default(autoincrement())
+  pseudo     String       @unique
+  role       String       @default("user")
+  password   String
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  GradeGroup GradeGroup[]
+}
+
+model AcademicYear {
+  id        Int        @id @default(autoincrement())
+  name      String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  Semester  Semester[]
+}
+
+model Semester {
+  id             Int          @id @default(autoincrement())
+  name           String
+  idAcademicYear Int
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  academicYear   AcademicYear @relation(fields: [idAcademicYear], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Unit           Unit[]
+}
+
+model Unit {
+  id          Int           @id @default(autoincrement())
+  name        String
+  idSemester  Int
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  semester    Semester      @relation(fields: [idSemester], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  PoleAverage PoleAverage[]
+}
+
+model PoleAverage {
+  id          Int       @id @default(autoincrement())
+  name        String
+  idUnit      Int
+  coefficient Float
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  unit        Unit      @relation(fields: [idUnit], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Subject     Subject[]
+}
+
+model Subject {
+  id            Int          @id @default(autoincrement())
+  name          String
+  coefficient   Float
+  idPoleAverage Int
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  PoleAverage   PoleAverage  @relation(fields: [idPoleAverage], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  GradeGroup    GradeGroup[]
+}
+
+model GradeGroup {
+  id          Int      @id @default(autoincrement())
+  name        String
+  coefficient Float
+  idSubject   Int
+  idUser      Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  Subject     Subject  @relation(fields: [idSubject], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  User        User     @relation(fields: [idUser], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Grade       Grade[]
+}
+
+model Grade {
+  id           Int        @id @default(autoincrement())
+  value        Float
+  coefficient  Float
+  idGradeGroup Int
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  GradeGroup   GradeGroup @relation(fields: [idGradeGroup], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
