@@ -9,21 +9,28 @@ const unauthenticatedPath :string[] = [
 ];
 const userPath :string[] = [
     '/mes-notes',
+    '/logout',
+    '/docs'
 ];
 const adminPath :string[] = [
-    '/admin'
+    '/admin',
+    '/mes-notes',
+    '/logout',
+    '/docs'
 ];
+
 export default defineNuxtRouteMiddleware( async (to, from) => {
     const authStore = useAuthStore();
-    if (unauthenticatedPath.includes(to.path)) return;
-    if (userPath.includes(to.path)){
-        if ((await authStore.isAuthenticated).authenticated) return;
-        return navigateTo('/');
+    if (!authStore && to.path !== '/') return;
+    switch ((await authStore.isAuthenticated).role) {
+        case 'admin':
+            if (adminPath.includes(to.path) || to.path.startsWith('/api/')) return;
+            else return navigateTo('/mes-notes');
+        case 'user':
+            if (userPath.includes(to.path) || to.path.startsWith('/api/')) return;
+            else return navigateTo('/mes-notes');
+        default:
+            if (unauthenticatedPath.includes(to.path) || to.path.startsWith('/api/')) return;
+            else return navigateTo('/');
     }
-    if (adminPath.includes(to.path)){
-        if (authStore.isAuthenticated && (await authStore.isAuthenticated).role === 'admin') return;
-        return navigateTo('/');
-    }
-    const role = (await authStore.isAuthenticated).role;
-    console.log(role);
 })
