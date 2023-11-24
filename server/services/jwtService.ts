@@ -20,8 +20,11 @@ export function generateAuthToken(payload: UserObject): string {
     return jwt.sign(payload, secretKey, {expiresIn: '1h'})
 }
 
-export function verifyToken(token: string): JwtPayload | null {
+export function verifyToken(token: string | null): JwtPayload | null {
     try {
+        if (!token) {
+            return null;
+        }
         if (!secretKey) {
             return null;
         }

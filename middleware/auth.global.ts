@@ -1,7 +1,4 @@
-import {PrismaClient} from "@prisma/client";
 import {useAuthStore} from "~/stores/auth-store";
-
-const prisma = new PrismaClient()
 
 const unauthenticatedPath :string[] = [
     '/',
@@ -18,19 +15,16 @@ const adminPath :string[] = [
 ];
 
 export default defineNuxtRouteMiddleware( async (to, from) => {
+    const authStore = useAuthStore();
     if (unauthenticatedPath.includes(to.path)) return;
     if (userPath.includes(to.path)){
-        const authStore = useAuthStore();
-        if (authStore.isAuthenticated) return;
-        else return navigateTo('/');
+        if ((await authStore.isAuthenticated).authenticated) return;
+        return navigateTo('/');
     }
     if (adminPath.includes(to.path)){
-        const authStore = useAuthStore();
-        if (authStore.isAuthenticated && await authStore.authenticatedAs === 'admin') return;
-        else return navigateTo('/');
+        if (authStore.isAuthenticated && (await authStore.isAuthenticated).role === 'admin') return;
+        return navigateTo('/');
     }
-    const authStore = useAuthStore();
-    authStore.$subscribe((cb) => { console.log(cb.events) })
-    const role = authStore.isAuthenticated;
-    console.log(role)
+    const role = (await authStore.isAuthenticated).role;
+    console.log(role);
 })

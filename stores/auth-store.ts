@@ -1,34 +1,32 @@
-import {verifyToken} from "~/server/services/jwtService";
-import {PrismaClient} from "@prisma/client";
+interface AuthenticationResult {
+    role: string;
+    authenticated: boolean;
+}
 
-const prisma = new PrismaClient();
-
-async function authenticatedAs(token: string | null ): Promise<string | null> {
-    if (!token) return null;
-    const payload = verifyToken(token);
-    if (!payload) return null;
-    const user = await prisma.user.findUnique({
-        where: {
-            id: payload.user_id
-        }
-    });
-    if (!user){
-        return null;
+async function isAuthenticated(token: string | null): Promise<AuthenticationResult> {
+    if (!token) {
+        return { role: 'unauthenticated', authenticated: false };
     }
-    return user.role;
+
+    try {
+        const response = await fetch('/api/user/authorization', {
+            method: 'GET',
+            headers: {
+                'Authorization': token
+            }
+        });
+
+        if (response.status !== 200) {
+            return { role: 'unauthenticated', authenticated: false };
+        }
+
+        const data = await response.json();
+        return { role: data.role, authenticated: true };
+    } catch (error) {
+        return { role: 'unauthenticated', authenticated: false };
+    }
 }
 
-function isAuthenticated(token: string | null): boolean {
-    if (!token) return false;
-    const payload = verifyToken(token);
-    if (!payload) return false;
-    if (!prisma.user.findUnique({
-        where: {
-            id: payload.user_id
-        }
-    })) return false;
-    return true;
-}
 
 export const useAuthStore = defineStore({
     id: 'auth',
@@ -37,11 +35,10 @@ export const useAuthStore = defineStore({
     }),
     getters: {
         isAuthenticated: (state) => isAuthenticated(state.token),
-        authenticatedAs: async (state) => await authenticatedAs(state.token)
     },
     actions: {
         setToken(token: string){
             this.token = token
         }
     }
-})
+});
