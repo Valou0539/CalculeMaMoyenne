@@ -13,7 +13,6 @@ const userPath :string[] = [
 const adminPath :string[] = [
     '/admin'
 ];
-
 export default defineNuxtRouteMiddleware( async (to, from) => {
     const authStore = useAuthStore();
     if (unauthenticatedPath.includes(to.path)) return;

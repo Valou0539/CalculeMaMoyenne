@@ -12,7 +12,6 @@ type UserObject = {
     role: string;
     permissions: Array<string>;
 }
-
 export function generateAuthToken(payload: UserObject): string {
     if (!secretKey){
         throw new Error('Secret key is not defined')

@@ -27,7 +27,6 @@ async function isAuthenticated(token: string | null): Promise<AuthenticationResu
     }
 }
 
-
 export const useAuthStore = defineStore({
     id: 'auth',
     state: () : {token: string | null } => ({
