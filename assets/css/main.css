@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Readex+Pro:wght@400;500;600;700&family=Roboto:wght@300;400;500&family=Ubuntu+Condensed&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer utilities {
+    .color-sheme-only-light {
+        color-scheme: only light;
+    }
+
+    .color-sheme-only-dark {
+        color-scheme: only dark;
+    }
+}
+
+html {
+    @apply scroll-smooth
+}
+
+noscript {
+    @apply bg-white mx-auto w-11/12 md:w-3/4
+}
+

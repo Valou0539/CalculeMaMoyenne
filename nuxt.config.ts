@@ -4,8 +4,22 @@ export default defineNuxtConfig({
   modules: [
     '@pinia/nuxt',
     '@pinia-plugin-persistedstate/nuxt',
+    '@nuxtjs/tailwindcss',
+    '@nuxt/image',
+    '@nuxtjs/color-mode',
+    'nuxt-icon'
   ],
   pinia: {
     storesDirs: ['~/stores/**'],
-  }
+  },
+  colorMode: {
+    classSuffix: ''
+  },
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
+    },
+  },
+  css: ['~/assets/css/main.css']
 })
