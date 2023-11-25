@@ -14,7 +14,7 @@
       <div class="flex items-center gap-3 md:gap-6">
         <ThemeButton />
         <div class="flex items-center gap-2 md:gap-4">
-          <NuxtLink to="/account" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary-button dark:bg-secondary-button-dark text-secondary-button-text dark:text-secondary-button-text-dark">
+          <NuxtLink v-if="isAuthenticated" to="/account" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary-button dark:bg-secondary-button-dark text-secondary-button-text dark:text-secondary-button-text-dark">
             <Icon class="md:w-[26px] md:h-[26px] absolute md:static hidden w-0 h-0 md:block" name="mdi:account" />
             <span class="text-xl">Compte</span>
           </NuxtLink>
@@ -27,9 +27,9 @@
       </div>
     </header>
     <slot/>
-    <footer class="w-full flex items-center justify-center gap-x-12 gap-y-4 flex-wrap px-6  text-sm md:text-[15px]">
+    <footer class="w-full flex items-center justify-center gap-x-12 gap-y-4 flex-wrap px-6  text-sm md:text-[15px] py-4">
       <NuxtLink to="/doc" class=" font-light">Consulter la documentation</NuxtLink>
-      <NuxtLink to="https://www.dev-boost.fr" class="flex items-center gap-1 font-light">
+      <NuxtLink to="https://www.dev-boost.fr" target="_blank" class="flex items-center gap-1 font-light">
         Site réalisé par Dev Boost
         <Icon name="mdi:external-link" class="md:w-[18px] md:h-[18px]"  size="16px"/>
       </NuxtLink>
