@@ -46,6 +46,10 @@ module.exports = {
           DEFAULT: "#00AD00",
           text: "#fff",
         },
+        error: {
+          DEFAULT: "#D10E00",
+          dark: "#FF6454",
+        }
       },
     },
   },
