@@ -21,8 +21,8 @@ export default defineEventHandler(async (event) => {
     }
     const hashed_password = await hash(body.password, 10);
     await new Promise(resolve => setTimeout(resolve, 2000));
-    const user = await prisma.user.findUnique({
-        where: {
+    const user = await prisma.user.create({
+        data: {
             pseudo: body.pseudo,
             password: hashed_password
         },
