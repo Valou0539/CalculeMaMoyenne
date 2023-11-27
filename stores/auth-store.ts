@@ -7,35 +7,13 @@ async function isAuthenticated(token: string | null): Promise<AuthenticationResu
     if (!token) {
         return { role: 'unauthenticated', authenticated: false };
     }
-
-    let role: any;
-    ({role} = await $fetch('/api/user/authorization', {
+    const response : {role?: string | undefined, error?: string | undefined} = await $fetch('/api/user/authorization', {
         method: 'GET',
         headers: {
             'Authorization': token
         }
-    }));
-
-    return role ? { role: role, authenticated: true } : { role: 'unauthenticated', authenticated: false }
-    /*
-    try {
-        const response = await fetch('/api/user/authorization', {
-            method: 'GET',
-            headers: {
-                'Authorization': token
-            }
-        });
-
-        if (response.status !== 200) {
-            return { role: 'unauthenticated', authenticated: false };
-        }
-
-        const data = await response.json();
-        return { role: data.role, authenticated: true };
-    } catch (error) {
-        console.log('test')
-        return { role: 'unauthenticated', authenticated: false };
-    }*/
+    });
+    return response.role ? { role: response.role, authenticated: true } : { role: 'unauthenticated', authenticated: false };
 }
 
 export const useAuthStore = defineStore({
