@@ -77,6 +77,6 @@ export default defineEventHandler(async (event) => {
         setResponseStatus(event, 503, 'An error occurred while updating the grade');
         return;
     }
-    setResponseStatus(event, 200, 'Grade updated');
+    setResponseStatus(event, 204, 'Grade updated');
     return;
 });

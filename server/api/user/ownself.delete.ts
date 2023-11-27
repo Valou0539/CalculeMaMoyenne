@@ -32,6 +32,7 @@ export default defineEventHandler(async (event) => {
         setResponseStatus(event, 503, 'An error occurred while deleting the user');
         return;
     }
-    setResponseStatus(event, 200, 'User deleted');
+    console.log('User deleted');
+    setResponseStatus(event, 204, 'User deleted');
     return;
 });

@@ -1,5 +1,5 @@
 import {PrismaClient} from "@prisma/client";
-import {checkTokenPermissions, verifyToken} from "~/server/services/jwtService";
+import {checkTokenPermissions} from "~/server/services/jwtService";
 import {PermissionsEnum} from "~/server/services/userService";
 
 const prisma = new PrismaClient()
@@ -31,6 +31,6 @@ export default defineEventHandler(async (event) => {
         setResponseStatus(event, 503, 'An error occurred while deleting the unit');
         return;
     }
-    setResponseStatus(event, 200, 'Unit deleted');
+    setResponseStatus(event, 204, 'Unit deleted');
     return;
 });

@@ -31,6 +31,6 @@ export default defineEventHandler(async (event) => {
         setResponseStatus(event, 503, 'An error occurred while creating the user');
         return;
     }
-    setResponseStatus(event, 200, 'User created');
+    setResponseStatus(event, 201, 'User created');
     return {token: generateAuthToken({user_id: user.id, role: user.role, permissions: Roles.user.permissions})};
 });

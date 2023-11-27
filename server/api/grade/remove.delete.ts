@@ -48,6 +48,6 @@ export default defineEventHandler(async (event) => {
         setResponseStatus(event, 503, 'An error occurred while deleting the grade');
         return;
     }
-    setResponseStatus(event, 200, 'Grade deleted');
+    setResponseStatus(event, 204, 'Grade deleted');
     return;
 });

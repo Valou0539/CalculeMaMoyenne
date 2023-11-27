@@ -1,5 +1,5 @@
 import {PrismaClient} from "@prisma/client";
-import {checkTokenPermissions, verifyToken} from "~/server/services/jwtService";
+import {checkTokenPermissions} from "~/server/services/jwtService";
 import {PermissionsEnum} from "~/server/services/userService";
 import {integer} from "vscode-languageserver-types";
 
@@ -37,6 +37,6 @@ export default defineEventHandler(async (event) => {
         setResponseStatus(event, 503, 'An error occurred while updating the subject');
         return;
     }
-    setResponseStatus(event, 200, 'Subject updated');
+    setResponseStatus(event, 204, 'Subject updated');
     return;
 });

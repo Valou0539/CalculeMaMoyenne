@@ -46,6 +46,6 @@ export default defineEventHandler(async (event) => {
         setResponseStatus(event, 503, 'An error occurred while deleting grade group');
         return;
     }
-    setResponseStatus(event, 200, 'Grade group deleted');
+    setResponseStatus(event, 204, 'Grade group deleted');
     return;
 });

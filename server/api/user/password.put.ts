@@ -46,6 +46,6 @@ export default defineEventHandler(async (event) => {
         setResponseStatus(event, 503, 'An error occurred while updating the password');
         return;
     }
-    setResponseStatus(event, 200, 'Password updated');
+    setResponseStatus(event, 204, 'Password updated');
     return;
 });
