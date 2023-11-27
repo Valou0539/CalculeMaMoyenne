@@ -6,10 +6,10 @@ const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
     if (!checkTokenPermissions(event, [PermissionsEnum.ReadAll, PermissionsEnum.ReadUsers])){
-        setResponseStatus(event, 402);
-        return {error: 'Unauthorized'};
+        setResponseStatus(event, 401, 'Unauthorized');
+        return;
     }
-    setResponseStatus(event, 200);
+    setResponseStatus(event, 200, 'Users fetched');
     return prisma.user.findMany({
         select: {
             pseudo: true,

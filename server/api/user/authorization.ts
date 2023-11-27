@@ -6,8 +6,8 @@ const prisma = new PrismaClient();
 export default defineEventHandler(async (event) => {
     const payload = verifyToken(<string>getHeader(event, 'Authorization'))
     if (!payload){
-        setResponseStatus(event, 402);
-        return {error: 'Unauthorized'};
+        setResponseStatus(event, 401, 'Unauthorized');
+        return;
     }
     const user = await prisma.user.findUnique({
         where: {
@@ -23,9 +23,9 @@ export default defineEventHandler(async (event) => {
         }
     });
     if (!user){
-        setResponseStatus(event, 402);
-        return {error: 'Unauthorized'};
+        setResponseStatus(event, 401, 'Unauthorized');
+        return;
     }
-    setResponseStatus(event, 200);
+    setResponseStatus(event, 200, 'Authorized');
     return {role:user.role};
 })

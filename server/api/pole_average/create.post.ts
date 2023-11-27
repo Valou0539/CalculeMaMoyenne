@@ -6,13 +6,13 @@ const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
     if (!checkTokenPermissions(event, [PermissionsEnum.CreatePoleAverages])){
-        setResponseStatus(event, 402);
-        return {error: 'Unauthorized'};
+        setResponseStatus(event, 401, 'Unauthorized');
+        return;
     }
     const body = await readBody(event);
     if (!body.name || !body.coefficient || !body.id_unit) {
-        setResponseStatus(event, 401);
-        return {error: 'Invalid body error'};
+        setResponseStatus(event, 422, 'Invalid body error (name, coefficient, id_unit)');
+        return;
     }
     const poleAverage = await prisma.poleAverage.create({
         data: {
@@ -22,9 +22,9 @@ export default defineEventHandler(async (event) => {
         }
     });
     if (!poleAverage){
-        setResponseStatus(event, 403);
-        return {error: 'An error occurred'};
+        setResponseStatus(event, 503, 'An error occurred while creating the pole average');
+        return;
     }
-    setResponseStatus(event, 200);
-    return {message: 'Pole average created'};
+    setResponseStatus(event, 201, 'Pole average created');
+    return;
 });

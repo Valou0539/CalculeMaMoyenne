@@ -6,21 +6,21 @@ const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
     if (!checkTokenPermissions(event, [PermissionsEnum.UpdateAcademicYears])){
-        setResponseStatus(event, 402);
-        return {error: 'Unauthorized'};
+        setResponseStatus(event, 401, 'Unauthorized');
+        return;
     }
     const body = await readBody(event);
     if (!body.id || !body.name) {
-        setResponseStatus(event, 401);
-        return {error: 'Invalid body error'};
+        setResponseStatus(event, 422, 'Invalid body error {id, name}');
+        return;
     }
     if (!await prisma.academicYear.findUnique({
         where: {
             id: body.id
         }
     })){
-        setResponseStatus(event, 403);
-        return {error: 'Invalid academic year'};
+        setResponseStatus(event, 404, 'Academic year not found');
+        return;
     }
     const academic_year = await prisma.academicYear.update({
         where: {
@@ -31,9 +31,9 @@ export default defineEventHandler(async (event) => {
         }
     });
     if (!academic_year){
-        setResponseStatus(event, 403);
-        return {error: 'An error occurred'};
+        setResponseStatus(event, 503, 'An error occurred while updating the academic year');
+        return;
     }
-    setResponseStatus(event, 200);
-    return {message: 'Academic year updated'};
+    setResponseStatus(event, 200, 'Academic year updated');
+    return;
 });

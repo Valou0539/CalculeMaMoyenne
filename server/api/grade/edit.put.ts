@@ -7,18 +7,13 @@ const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
     if (!checkTokenPermissions(event, [PermissionsEnum.UpdateOwnSelfGrades])){
-        setResponseStatus(event, 402);
-        return {error: 'Unauthorized'};
-    }
-    const body = await readBody(event);
-    if (!body.id || (!body.value && !body.coefficient && !body.id_grade_group)) {
-        setResponseStatus(event, 401);
-        return {error: 'Invalid body error'};
+        setResponseStatus(event, 401, 'Unauthorized');
+        return;
     }
     const payload = verifyToken(<string>getHeader(event, 'Authorization'))
     if (!payload){
-        setResponseStatus(event, 402);
-        return {error: 'Unauthorized'};
+        setResponseStatus(event, 401, 'Unauthorized');
+        return;
     }
     const user = await prisma.user.findUnique({
         where: {
@@ -26,8 +21,23 @@ export default defineEventHandler(async (event) => {
         }
     });
     if (!user){
-        setResponseStatus(event, 402);
-        return {error: 'Unauthorized'};
+        setResponseStatus(event, 401, 'Unauthorized');
+        return;
+    }
+    const body = await readBody(event);
+    if (!body.id || (!body.value && !body.coefficient && !body.id_grade_group)) {
+        setResponseStatus(event, 422, 'Invalid body error {id, value?, coefficient?, id_grade_group?}');
+        return;
+    }
+    const gradeGroup = await prisma.gradeGroup.findUnique({
+        where: {
+            id: body.id_grade_group,
+            idUser: user.id
+        }
+    });
+    if (!gradeGroup){
+        setResponseStatus(event, 404, 'Grade group not found');
+        return;
     }
     if (!await prisma.grade.findUnique({
         where: {
@@ -37,9 +47,10 @@ export default defineEventHandler(async (event) => {
             }
         }
     })){
-        setResponseStatus(event, 403);
-        return {error: 'Invalid grade id'};
+        setResponseStatus(event, 404, 'Grade not found');
+        return;
     }
+
     const updateData: { value?: number, coefficient?: integer, idGradeGroup?: integer } = {};
 
     if (body.value) {
@@ -55,14 +66,17 @@ export default defineEventHandler(async (event) => {
     }
     const grade = await prisma.grade.update({
         where: {
-            id: body.id
+            id: body.id,
+            GradeGroup: {
+                idUser: user.id
+            }
         },
         data: updateData
     });
     if (!grade){
-        setResponseStatus(event, 403);
-        return {error: 'An error occurred'};
+        setResponseStatus(event, 503, 'An error occurred while updating the grade');
+        return;
     }
-    setResponseStatus(event, 200);
-    return {message: 'Grade updated'};
+    setResponseStatus(event, 200, 'Grade updated');
+    return;
 });

@@ -8,16 +8,16 @@ const prisma = new PrismaClient();
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);
     if (!body.pseudo || !body.password || body.password.length < 5) {
-        setResponseStatus(event, 401);
-        return {error: 'Invalid body error'};
+        setResponseStatus(event, 422, 'Invalid body error {pseudo, password}');
+        return;
     }
     if (await prisma.user.findUnique({
         where: {
             pseudo: body.pseudo
         }
     })) {
-        setResponseStatus(event, 403);
-        return {error: 'A user with this pseudo already exists'};
+        setResponseStatus(event, 401, 'Unauthorized, pseudo already exists');
+        return;
     }
     const hashed_password = await hash(body.password, 10);
     await new Promise(resolve => setTimeout(resolve, 2000));
@@ -28,9 +28,9 @@ export default defineEventHandler(async (event) => {
         },
     });
     if (!user) {
-        setResponseStatus(event, 403);
-        return {error: 'An error occurred'};
+        setResponseStatus(event, 503, 'An error occurred while creating the user');
+        return;
     }
-    setResponseStatus(event, 200);
+    setResponseStatus(event, 200, 'User created');
     return {token: generateAuthToken({user_id: user.id, role: user.role, permissions: Roles.user.permissions})};
 });

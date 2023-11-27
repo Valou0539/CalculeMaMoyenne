@@ -6,8 +6,8 @@ const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
     if (!checkTokenPermissions(event, [PermissionsEnum.ReadAll, PermissionsEnum.ReadAcademicYears])){
-        setResponseStatus(event, 402);
-        return {error: 'Unauthorized'};
+        setResponseStatus(event, 401, 'Unauthorized');
+        return;
     }
     setResponseStatus(event, 200);
     return prisma.academicYear.findMany({

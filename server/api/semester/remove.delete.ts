@@ -6,21 +6,21 @@ const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
     if (!checkTokenPermissions(event, [PermissionsEnum.DeleteSemesters])){
-        setResponseStatus(event, 402);
-        return {error: 'Unauthorized'};
+        setResponseStatus(event, 401, 'Unauthorized');
+        return;
     }
     const body = await readBody(event);
     if (!body.id) {
-        setResponseStatus(event, 401);
-        return {error: 'Invalid body error'};
+        setResponseStatus(event, 422, 'Invalid body error {id}');
+        return;
     }
     if (!await prisma.semester.findUnique({
         where: {
             id: body.id
         }
     })){
-        setResponseStatus(event, 403);
-        return {error: 'Invalid semester id'};
+        setResponseStatus(event, 404, 'Semester not found');
+        return;
     }
     const semester = await prisma.semester.delete({
         where: {
@@ -28,9 +28,9 @@ export default defineEventHandler(async (event) => {
         }
     });
     if (!semester){
-        setResponseStatus(event, 403);
-        return {error: 'An error occurred'};
+        setResponseStatus(event, 503, 'An error occurred while deleting the semester');
+        return;
     }
-    setResponseStatus(event, 200);
-    return {message: 'Semester deleted'};
+    setResponseStatus(event, 200, 'Semester deleted');
+    return;
 });

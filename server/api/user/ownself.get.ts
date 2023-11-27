@@ -6,13 +6,13 @@ const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
     if (!checkTokenPermissions(event, [PermissionsEnum.ReadOwnSelf])){
-        setResponseStatus(event, 402);
-        return {error: 'Unauthorized'};
+        setResponseStatus(event, 401, 'Unauthorized');
+        return;
     }
     const payload = verifyToken(<string>getHeader(event, 'Authorization'))
     if (!payload){
-        setResponseStatus(event, 402);
-        return {error: 'Unauthorized'};
+        setResponseStatus(event, 401, 'Unauthorized');
+        return;
     }
 
     const user = await prisma.user.findUnique({
@@ -29,8 +29,8 @@ export default defineEventHandler(async (event) => {
         }
     });
     if (!user){
-        setResponseStatus(event, 402);
-        return {error: 'Unauthorized'};
+        setResponseStatus(event, 401, 'Unauthorized');
+        return;
     }
 
     const userAcademicYears = await prisma.academicYear.findMany({
@@ -227,6 +227,6 @@ export default defineEventHandler(async (event) => {
         });
     });
 
-    setResponseStatus(event, 200);
+    setResponseStatus(event, 200, 'User data');
     return {user, userAcademicYears};
 });

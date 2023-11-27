@@ -6,13 +6,13 @@ const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
     if (!checkTokenPermissions(event, [PermissionsEnum.CreateSemesters])){
-        setResponseStatus(event, 402);
-        return {error: 'Unauthorized'};
+        setResponseStatus(event, 401, 'Unauthorized');
+        return;
     }
     const body = await readBody(event);
     if (!body.name || !body.id_academic_year) {
-        setResponseStatus(event, 401);
-        return {error: 'Invalid body error'};
+        setResponseStatus(event, 422, 'Invalid body error {name, id_academic_year}');
+        return;
     }
     const semester = await prisma.semester.create({
         data: {
@@ -21,9 +21,9 @@ export default defineEventHandler(async (event) => {
         }
     });
     if (!semester){
-        setResponseStatus(event, 403);
-        return {error: 'An error occurred'};
+        setResponseStatus(event, 503, 'An error occurred while creating the semester');
+        return;
     }
-    setResponseStatus(event, 200);
-    return {message: 'Semester created'};
+    setResponseStatus(event, 201, 'Semester created');
+    return;
 });

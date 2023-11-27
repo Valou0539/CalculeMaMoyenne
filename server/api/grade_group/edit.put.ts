@@ -7,18 +7,18 @@ const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
     if (!checkTokenPermissions(event, [PermissionsEnum.UpdateOwnSelfGrades])){
-        setResponseStatus(event, 402);
-        return {error: 'Unauthorized'};
+        setResponseStatus(event, 401, 'Unauthorized');
+        return;
     }
     const body = await readBody(event);
     if (!body.id || (!body.name && !body.coefficient && !body.id_subject)) {
-        setResponseStatus(event, 401);
-        return {error: 'Invalid body error'};
+        setResponseStatus(event, 422, 'Invalid body error {id, name?, coefficient?, id_subject?}');
+        return;
     }
     const payload = verifyToken(<string>getHeader(event, 'Authorization'))
     if (!payload){
-        setResponseStatus(event, 402);
-        return {error: 'Unauthorized'};
+        setResponseStatus(event, 401, 'Unauthorized');
+        return;
     }
     const user = await prisma.user.findUnique({
         where: {
@@ -26,8 +26,8 @@ export default defineEventHandler(async (event) => {
         }
     });
     if (!user){
-        setResponseStatus(event, 402);
-        return {error: 'Unauthorized'};
+        setResponseStatus(event, 401, 'Unauthorized');
+        return;
     }
     if (!await prisma.gradeGroup.findUnique({
         where: {
@@ -35,8 +35,8 @@ export default defineEventHandler(async (event) => {
             idUser: user.id
         }
     })){
-        setResponseStatus(event, 403);
-        return {error: 'Invalid grade group id'};
+        setResponseStatus(event, 404, 'Grade group not found');
+        return;
     }
     const updateData: { name?: string, coefficient?: integer, idSubject?: integer } = {};
 
@@ -58,9 +58,9 @@ export default defineEventHandler(async (event) => {
         data: updateData
     });
     if (!gradeGroup){
-        setResponseStatus(event, 403);
-        return {error: 'An error occurred'};
+        setResponseStatus(event, 503, 'An error occurred while updating grade group');
+        return;
     }
-    setResponseStatus(event, 200);
-    return {message: 'Grade group updated'};
+    setResponseStatus(event, 200, 'Grade group updated');
+    return;
 });

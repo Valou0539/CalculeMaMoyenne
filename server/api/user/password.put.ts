@@ -7,18 +7,18 @@ const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
     if (!checkTokenPermissions(event, [PermissionsEnum.UpdateOwnSelf])){
-        setResponseStatus(event, 402);
-        return {error: 'Unauthorized'};
+        setResponseStatus(event, 401, 'Unauthorized');
+        return;
     }
     const body = await readBody(event);
     if (!body.password || !body.new_password || body.new_password.length < 5) {
-        setResponseStatus(event, 401);
-        return {error: 'Invalid body error'};
+        setResponseStatus(event, 422, 'Invalid body error {password, new_password}');
+        return;
     }
     const payload = verifyToken(<string>getHeader(event, 'Authorization'))
     if (!payload){
-        setResponseStatus(event, 402);
-        return {error: 'Unauthorized'};
+        setResponseStatus(event, 401, 'Unauthorized');
+        return;
     }
     const user = await prisma.user.findUnique({
         where: {
@@ -26,12 +26,12 @@ export default defineEventHandler(async (event) => {
         }
     });
     if (!user){
-        setResponseStatus(event, 402);
-        return {error: 'Unauthorized'};
+        setResponseStatus(event, 401, 'Unauthorized');
+        return;
     }
     if (!await compare(body.password, user.password)){
-        setResponseStatus(event, 403);
-        return {error: 'Invalid password'};
+        setResponseStatus(event, 401, 'Unauthorized, invalid password');
+        return;
     }
     const hashed_password = await hash(body.new_password, 10);
     const password = await prisma.user.update({
@@ -43,9 +43,9 @@ export default defineEventHandler(async (event) => {
         }
     })
     if (!password){
-        setResponseStatus(event, 403);
-        return {error: 'An error occurred'};
+        setResponseStatus(event, 503, 'An error occurred while updating the password');
+        return;
     }
-    setResponseStatus(event, 200);
-    return {message: 'Password updated'};
+    setResponseStatus(event, 200, 'Password updated');
+    return;
 });

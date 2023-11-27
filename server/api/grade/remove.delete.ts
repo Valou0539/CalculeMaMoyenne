@@ -6,18 +6,18 @@ const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
     if (!checkTokenPermissions(event, [PermissionsEnum.DeleteOwnSelfGrades])){
-        setResponseStatus(event, 402);
-        return {error: 'Unauthorized'};
-    }
-    const body = await readBody(event);
-    if (!body.id) {
-        setResponseStatus(event, 401);
-        return {error: 'Invalid body error'};
+        setResponseStatus(event, 401, 'Unauthorized');
+        return;
     }
     const payload = verifyToken(<string>getHeader(event, 'Authorization'))
     if (!payload){
-        setResponseStatus(event, 402);
-        return {error: 'Unauthorized'};
+        setResponseStatus(event, 401, 'Unauthorized');
+        return;
+    }
+    const body = await readBody(event);
+    if (!body.id) {
+        setResponseStatus(event, 422, 'Invalid body error {id}');
+        return;
     }
     const user = await prisma.user.findUnique({
         where: {
@@ -25,8 +25,8 @@ export default defineEventHandler(async (event) => {
         }
     });
     if (!user){
-        setResponseStatus(event, 402);
-        return {error: 'Unauthorized'};
+        setResponseStatus(event, 401, 'Unauthorized');
+        return;
     }
     if (!await prisma.grade.findUnique({
         where: {
@@ -36,8 +36,8 @@ export default defineEventHandler(async (event) => {
             }
         }
     })){
-        setResponseStatus(event, 403);
-        return {error: 'Invalid grade id'};
+        setResponseStatus(event, 404, 'Grade not found');
+        return;
     }
     const grade = await prisma.grade.delete({
         where: {
@@ -45,9 +45,9 @@ export default defineEventHandler(async (event) => {
         }
     });
     if (!grade){
-        setResponseStatus(event, 403);
-        return {error: 'An error occurred'};
+        setResponseStatus(event, 503, 'An error occurred while deleting the grade');
+        return;
     }
-    setResponseStatus(event, 200);
-    return {message: 'Grade deleted'};
+    setResponseStatus(event, 200, 'Grade deleted');
+    return;
 });

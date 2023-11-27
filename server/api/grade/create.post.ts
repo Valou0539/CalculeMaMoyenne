@@ -1,30 +1,54 @@
 import {PrismaClient} from "@prisma/client";
-import {checkTokenPermissions} from "~/server/services/jwtService";
+import {checkTokenPermissions, verifyToken} from "~/server/services/jwtService";
 import {PermissionsEnum} from "~/server/services/userService";
 
 const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
     if (!checkTokenPermissions(event, [PermissionsEnum.CreateOwnSelfGrades])){
-        setResponseStatus(event, 402);
-        return {error: 'Unauthorized'};
+        setResponseStatus(event, 401, 'Unauthorized');
+        return;
+    }
+    const payload = verifyToken(<string>getHeader(event, 'Authorization'))
+    if (!payload){
+        setResponseStatus(event, 401, 'Unauthorized');
+        return;
+    }
+    const user = await prisma.user.findUnique({
+        where: {
+            id: payload.user_id
+        }
+    });
+    if (!user){
+        setResponseStatus(event, 401, 'Unauthorized');
+        return;
     }
     const body = await readBody(event);
     if (!body.value || !body.coefficient || !body.id_grade_group) {
-        setResponseStatus(event, 401);
-        return {error: 'Invalid body error'};
+        setResponseStatus(event, 422, 'Invalid body error {value, coefficient, id_grade_group}');
+        return;
+    }
+    const gradeGroup = await prisma.gradeGroup.findUnique({
+        where: {
+            id: body.id_grade_group,
+            idUser: user.id
+        }
+    });
+    if (!gradeGroup){
+        setResponseStatus(event, 404, 'Grade group not found');
+        return;
     }
     const grade = await prisma.grade.create({
         data: {
             value: body.name,
             coefficient: body.coefficient,
-            idGradeGroup: body.id_grade_group
+            idGradeGroup: gradeGroup.id
         }
     });
     if (!grade){
-        setResponseStatus(event, 403);
-        return {error: 'An error occurred'};
+        setResponseStatus(event, 503, 'An error occurred while creating the grade');
+        return;
     }
-    setResponseStatus(event, 200);
-    return {message: 'Grade created'};
+    setResponseStatus(event, 201, 'Grade created');
+    return;
 });

@@ -6,13 +6,13 @@ const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
     if (!checkTokenPermissions(event, [PermissionsEnum.CreateAcademicYears])){
-        setResponseStatus(event, 402);
-        return {error: 'Unauthorized'};
+        setResponseStatus(event, 401, 'Unauthorized');
+        return;
     }
     const body = await readBody(event);
     if (!body.name) {
-        setResponseStatus(event, 401);
-        return {error: 'Invalid body error'};
+        setResponseStatus(event, 422, 'Invalid body error {name}');
+        return;
     }
     const academic_year = await prisma.academicYear.create({
         data: {
@@ -20,9 +20,9 @@ export default defineEventHandler(async (event) => {
         }
     });
     if (!academic_year){
-        setResponseStatus(event, 403);
-        return {error: 'An error occurred'};
+        setResponseStatus(event, 503, 'An error occurred while creating the academic year');
+        return;
     }
-    setResponseStatus(event, 200);
-    return {message: 'Academic year created'};
+    setResponseStatus(event, 201, 'Academic year created');
+    return;
 });
