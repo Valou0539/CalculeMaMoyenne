@@ -5,18 +5,20 @@ const unauthenticatedPath :string[] = [
     '/index',
     '/login',
     '/register',
-    '/docs'
+    '/doc'
 ];
 const userPath :string[] = [
     '/mes-notes',
     '/logout',
-    '/docs'
+    '/doc',
+    '/account'
 ];
 const adminPath :string[] = [
     '/admin',
     '/mes-notes',
     '/logout',
-    '/docs'
+    '/doc',
+    '/account'
 ];
 
 export default defineNuxtRouteMiddleware( async (to, from) => {

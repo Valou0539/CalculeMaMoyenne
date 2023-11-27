@@ -8,6 +8,16 @@ async function isAuthenticated(token: string | null): Promise<AuthenticationResu
         return { role: 'unauthenticated', authenticated: false };
     }
 
+    let role: any;
+    ({role} = await $fetch('/api/user/authorization', {
+        method: 'GET',
+        headers: {
+            'Authorization': token
+        }
+    }));
+
+    return role ? { role: role, authenticated: true } : { role: 'unauthenticated', authenticated: false }
+    /*
     try {
         const response = await fetch('/api/user/authorization', {
             method: 'GET',
@@ -23,8 +33,9 @@ async function isAuthenticated(token: string | null): Promise<AuthenticationResu
         const data = await response.json();
         return { role: data.role, authenticated: true };
     } catch (error) {
+        console.log('test')
         return { role: 'unauthenticated', authenticated: false };
-    }
+    }*/
 }
 
 export const useAuthStore = defineStore({
@@ -39,5 +50,6 @@ export const useAuthStore = defineStore({
         setToken(token: string){
             this.token = token
         }
-    }
+    },
+    persist: true
 });
