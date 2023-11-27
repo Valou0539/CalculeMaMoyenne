@@ -21,9 +21,10 @@
       <button
           v-if="type === 'password' && !showPassword"
           type="button"
-          @click="showPassword = !showPassword"
-          @keydown.enter="showPassword = !showPassword; input.focus()"
+          @click="showPassword = true"
+          @keydown.enter.prevent="showPassword = true; input.focus()"
           class="absolute right-2 bottom-1/2 translate-y-1/2"
+          aria-label="Afficher le mot de passe"
       >
         <Icon
             class="opacity-75 hover:opacity-100"
@@ -34,9 +35,10 @@
       <button
           v-if="type === 'password' && showPassword"
           type="button"
-          @click="showPassword = !showPassword"
-          @keydown.enter="showPassword = !showPassword; input.focus()"
+          @click="showPassword = false"
+          @keydown.enter.prevent="showPassword = false; input.focus()"
           class="absolute right-2 bottom-1/2 translate-y-1/2"
+          aria-label="Masquer le mot de passe"
       >
         <Icon
             class="opacity-75 hover:opacity-100"
@@ -45,7 +47,7 @@
         />
       </button>
     </div>
-    <span class="text-error dark:text-error-dark mt-1 block">
+    <span class="text-error dark:text-error-dark mt-1 block text-sm">
       {{ error }}
     </span>
 

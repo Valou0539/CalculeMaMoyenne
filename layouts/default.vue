@@ -1,7 +1,7 @@
 <template>
   <div class="bg-background dark:bg-background-dark text-text dark:text-text-dark font-body min-h-screen">
     <header class="h-20 lg:h-24 flex items-center justify-between px-2 md:px-6">
-      <div class="flex items-center">
+      <NuxtLink to="/" class="flex items-center">
         <NuxtImg
           class="w-12 h-12 lg:w-20 lg:h-20"
           src="img/logo.png"
@@ -10,11 +10,11 @@
         <h1 class="font-logo text-xl lg:text-[32px] text sm:block hidden">
           CalculeMaMoyenne
         </h1>
-      </div>
+      </NuxtLink>
       <div class="flex items-center gap-3 md:gap-6">
         <ThemeButton />
         <div class="flex items-center gap-2 md:gap-4">
-          <NuxtLink v-if="isAuthenticated" to="/account" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary-button dark:bg-secondary-button-dark text-secondary-button-text dark:text-secondary-button-text-dark">
+          <NuxtLink v-if="!!token" to="/account" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary-button dark:bg-secondary-button-dark text-secondary-button-text dark:text-secondary-button-text-dark">
             <Icon class="md:w-[26px] md:h-[26px] absolute md:static hidden w-0 h-0 md:block" name="mdi:account" />
             <span class="text-xl">Compte</span>
           </NuxtLink>
@@ -37,11 +37,9 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
   import { useAuthStore } from "~/stores/auth-store";
 
   const authStore = useAuthStore();
-  const isAuthenticated = ref(false);
-
-  isAuthenticated.value = (await authStore.isAuthenticated).authenticated;
+  const { token } = storeToRefs(authStore);
 </script>

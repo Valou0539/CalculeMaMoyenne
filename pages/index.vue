@@ -9,26 +9,26 @@
           moyenne.
         </p>
       </div>
-      <form class="lg:w-[356px] flex-shrink-0" @submit.prevent>
+      <form class="lg:w-[356px] flex-shrink-0" @submit.prevent="login">
         <CustomInput
-            @input="console.log(email)"
             name="pseudo"
             label="Pseudonyme"
             type="text"
             placeholder="Pseudonyme"
-            v-model="email"
+            v-model="pseudo"
             class="mb-4"
             autoComplete="username"
+            :error="pseudoError"
         />
         <CustomInput
-            @input="console.log(password)"
             name="password"
             label="Mot de passe"
             type="password"
             placeholder="Mot de passe"
             v-model="password"
             class="mb-8"
-            autoComplete="password"
+            autoComplete="current-password"
+            :error="passwordError"
         />
         <div class="sm:flex items-center gap-4">
           <button
@@ -66,10 +66,43 @@
       </div>
     </section>
   </main>
-
 </template>
 
 <script setup>
-const email = ref("");
+import {useAuthStore} from "~/stores/auth-store";
+
+const pseudo = ref("");
 const password = ref("");
+
+const pseudoError = ref("");
+const passwordError = ref("");
+
+const login = async () => {
+  if (pseudo.value === "") {
+    pseudoError.value = "Pseudonyme Requis";
+    return;
+  }
+  pseudoError.value = "";
+  if (password.value.length < 5) {
+    passwordError.value = "Mot de passe trop court";
+    return;
+  }
+  passwordError.value = "";
+
+  const response = await useFetch('/api/user/login', {
+    method: 'POST',
+    body: {
+      pseudo: pseudo.value,
+      password: password.value,
+    },
+    watch: false
+  });
+
+  if (response.data.value.token) {
+    const authStore = useAuthStore();
+    authStore.setToken(response.data.value.token);
+
+    navigateTo('/mes-notes');
+  }
+}
 </script>
