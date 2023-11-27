@@ -2,6 +2,7 @@
   <button
       class="relative w-7 h-7 lg:w-8 lg:h-8"
       @click="setColorTheme($colorMode.value === 'light' ? 'dark' : 'light')"
+      aria-label="Changer le thème"
   >
     <Icon
       class="absolute w-full h-full transition-all duration-300 rotate-180 opacity-0 dark:rotate-0 top-0 left-0 dark:opacity-100 text-text-dark"
