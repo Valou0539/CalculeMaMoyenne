@@ -18,6 +18,7 @@
             v-model="pseudo"
             class="mb-4"
             autoComplete="username"
+            :error="pseudoError"
         />
         <CustomInput
             name="password"
@@ -35,8 +36,8 @@
             placeholder="Mot de passe répété"
             v-model="passwordConfirmation"
             class="mb-8"
-            :error="passwordError"
             autoComplete="new-password"
+            :error="passwordError"
         />
         <div class="flex items-center gap-4">
           <button
@@ -55,6 +56,8 @@
 </template>
 
 <script setup>
+import {useAuthStore} from "~/stores/auth-store";
+
 const pseudo = ref('');
 const password = ref('');
 const passwordConfirmation = ref('');
@@ -63,24 +66,34 @@ const pseudoError = ref('');
 const passwordError = ref('');
 
 const register = async () => {
+  if (!pseudo.value) {
+    pseudoError.value = 'Pseudonyme Requis';
+    return;
+  }
   pseudoError.value = '';
-  passwordError.value = '';
-
   if (password.value.length < 5) {
     passwordError.value = 'Le mot de passe doit faire au moins 5 caractères';
+    return;
   } else if (password.value !== passwordConfirmation.value) {
     passwordError.value = 'Les mots de passe ne sont pas identiques';
-  } else {
-    const data = await useFetch('/api/user/register', {
-      method: 'POST',
-      body: {
-        pseudo: pseudo.value,
-        password: password.value,
-      },
-      watch: false
-    });
+    return;
+  }
+  passwordError.value = '';
 
-    console.log(data)
+  const response = await useFetch('/api/user/register', {
+    method: 'POST',
+    body: {
+      pseudo: pseudo.value,
+      password: password.value,
+    },
+    watch: false
+  });
+
+  if (response.data.value.token) {
+    const authStore = useAuthStore();
+    authStore.setToken(response.data.value.token);
+
+    navigateTo('/mes-notes');
   }
 }
 </script>
