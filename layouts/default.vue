@@ -18,7 +18,7 @@
             <Icon class="md:w-[26px] md:h-[26px] absolute md:static hidden w-0 h-0 md:block" name="mdi:account" />
             <span class="text-xl">Compte</span>
           </NuxtLink>
-          <NuxtLink to="https://google.com" class="flex items-center gap-2 leading-none border-primary-button border rounded-lg block py-2 px-4">
+          <NuxtLink to="https://google.com" class="flex items-center gap-2 leading-none border-primary-button border rounded-lg block py-[7px] px-4">
             <Icon class="w-6 h-6 pb-0.5" name="teenyicons:cup-solid" />
             <span class="hidden md:block text-xl">Offrez-nous un café</span>
           </NuxtLink>
