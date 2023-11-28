@@ -14,8 +14,7 @@ const userPath :string[] = [
     '/account'
 ];
 const adminPath :string[] = [
-    '/admin',
-    '/mes-notes',
+    '/admin-panel',
     '/logout',
     '/doc',
     '/account'
@@ -27,7 +26,7 @@ export default defineNuxtRouteMiddleware( async (to, from) => {
     switch ((await authStore.isAuthenticated).role) {
         case 'admin':
             if (adminPath.includes(to.path) || to.path.startsWith('/api/')) return;
-            else return navigateTo('/mes-notes');
+            else return navigateTo('/admin-panel');
         case 'user':
             if (userPath.includes(to.path) || to.path.startsWith('/api/')) return;
             else return navigateTo('/mes-notes');
