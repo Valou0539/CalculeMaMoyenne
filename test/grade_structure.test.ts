@@ -286,6 +286,118 @@ describe("Connection of an admin user and creation, modification, and deletion o
             }
         })
     });
+    test('delete a grade', async () => {
+        await ApiFetch('grade/remove', {
+            method: 'DELETE',
+            headers: {
+                'Authorization': token
+            },
+            body: JSON.stringify({
+                id: grade_id
+            }),
+            async onResponse({request, response, options}) {
+                console.log(response.status);
+                console.log(response.statusText);
+                expect(response.status).toBe(204);
+            }
+        })
+    });
+    test('delete a grade group', async () => {
+        await ApiFetch('grade_group/remove', {
+            method: 'DELETE',
+            headers: {
+                'Authorization': token
+            },
+            body: JSON.stringify({
+                id: grade_group_id
+            }),
+            async onResponse({request, response, options}) {
+                console.log(response.status);
+                console.log(response.statusText);
+                expect(response.status).toBe(204);
+            }
+        })
+    });
+    test('delete a subject', async () => {
+        await ApiFetch('subject/remove', {
+            method: 'DELETE',
+            headers: {
+                'Authorization': token
+            },
+            body: JSON.stringify({
+                id: subject_id
+            }),
+            async onResponse({request, response, options}) {
+                console.log(response.status);
+                console.log(response.statusText);
+                expect(response.status).toBe(204);
+            }
+        })
+    });
+    test('delete a pole average', async () => {
+        await ApiFetch('pole_average/remove', {
+            method: 'DELETE',
+            headers: {
+                'Authorization': token
+            },
+            body: JSON.stringify({
+                id: pole_average_id
+            }),
+            async onResponse({request, response, options}) {
+                console.log(response.status);
+                console.log(response.statusText);
+                expect(response.status).toBe(204);
+            }
+        })
+    });
+    test('delete a unit', async () => {
+        await ApiFetch('unit/remove', {
+            method: 'DELETE',
+            headers: {
+                'Authorization': token
+            },
+            body: JSON.stringify({
+                id: unit_id
+            }),
+            async onResponse({request, response, options}) {
+                console.log(response.status);
+                console.log(response.statusText);
+                expect(response.status).toBe(204);
+            }
+        })
+    });
+    test('delete a semester', async () => {
+        await ApiFetch('semester/remove', {
+            method: 'DELETE',
+            headers: {
+                'Authorization': token
+            },
+            body: JSON.stringify({
+                id: semester_id
+            }),
+            async onResponse({request, response, options}) {
+                console.log(response.status);
+                console.log(response.statusText);
+                expect(response.status).toBe(204);
+            }
+        })
+    });
+    test('delete an academic year', async () => {
+        await ApiFetch('academic_year/remove', {
+            method: 'DELETE',
+            headers: {
+                'Authorization': token
+            },
+            body: JSON.stringify({
+                id: academic_year_id
+            }),
+            async onResponse({request, response, options}) {
+                console.log(response.status);
+                console.log(response.statusText);
+                expect(response.status).toBe(204);
+            }
+        })
+    });
 });
 
 describe('Deletion of the grade structure', () => {
