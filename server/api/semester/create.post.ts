@@ -10,14 +10,14 @@ export default defineEventHandler(async (event) => {
         return;
     }
     const body = await readBody(event);
-    if (!body.name || !body.id_academic_year) {
-        setResponseStatus(event, 422, 'Invalid body error {name, id_academic_year}');
+    if (!body.name || !body.idAcademicYear) {
+        setResponseStatus(event, 422, 'Invalid body error {name, idAcademicYear}');
         return;
     }
     const semester = await prisma.semester.create({
         data: {
             name: body.name,
-            idAcademicYear: body.id_academic_year
+            idAcademicYear: body.idAcademicYear
         }
     });
     if (!semester){
@@ -25,5 +25,5 @@ export default defineEventHandler(async (event) => {
         return;
     }
     setResponseStatus(event, 201, 'Semester created');
-    return;
+    return semester;
 });

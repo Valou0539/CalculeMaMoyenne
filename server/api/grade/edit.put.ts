@@ -25,18 +25,8 @@ export default defineEventHandler(async (event) => {
         return;
     }
     const body = await readBody(event);
-    if (!body.id || (!body.value && !body.coefficient && !body.id_grade_group)) {
-        setResponseStatus(event, 422, 'Invalid body error {id, value?, coefficient?, id_grade_group?}');
-        return;
-    }
-    const gradeGroup = await prisma.gradeGroup.findUnique({
-        where: {
-            id: body.id_grade_group,
-            idUser: user.id
-        }
-    });
-    if (!gradeGroup){
-        setResponseStatus(event, 404, 'Grade group not found');
+    if (!body.id || (!body.value && !body.coefficient && !body.idGradeGroup)) {
+        setResponseStatus(event, 422, 'Invalid body error {id, value?, coefficient?, idGradeGroup?}');
         return;
     }
     if (!await prisma.grade.findUnique({
@@ -61,8 +51,18 @@ export default defineEventHandler(async (event) => {
         updateData.coefficient = body.coefficient;
     }
 
-    if (body.id_grade_group) {
-        updateData.idGradeGroup = body.id_grade_group;
+    if (body.idGradeGroup) {
+        const gradeGroup = await prisma.gradeGroup.findUnique({
+            where: {
+                id: body.idGradeGroup,
+                idUser: user.id
+            }
+        });
+        if (!gradeGroup){
+            setResponseStatus(event, 404, 'Grade group not found');
+            return;
+        }
+        updateData.idGradeGroup = gradeGroup.id;
     }
     const grade = await prisma.grade.update({
         where: {

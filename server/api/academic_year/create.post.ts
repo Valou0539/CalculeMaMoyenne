@@ -24,5 +24,5 @@ export default defineEventHandler(async (event) => {
         return;
     }
     setResponseStatus(event, 201, 'Academic year created');
-    return;
+    return academic_year;
 });

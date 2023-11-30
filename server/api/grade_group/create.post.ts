@@ -24,15 +24,15 @@ export default defineEventHandler(async (event) => {
         return;
     }
     const body = await readBody(event);
-    if (!body.name || !body.coefficient || !body.id_subject) {
-        setResponseStatus(event, 422, 'Invalid body error (name, coefficient, id_subject)');
+    if (!body.name || !body.coefficient || !body.idSubject) {
+        setResponseStatus(event, 422, 'Invalid body error (name, coefficient, idSubject)');
         return;
     }
     const gradeGroup = await prisma.gradeGroup.create({
         data: {
             name: body.name,
             coefficient: body.coefficient,
-            idSubject: body.id_subject,
+            idSubject: body.idSubject,
             idUser: user.id
         }
     });
@@ -41,5 +41,5 @@ export default defineEventHandler(async (event) => {
         return;
     }
     setResponseStatus(event, 201, 'Grade group created');
-    return;
+    return gradeGroup;
 });

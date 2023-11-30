@@ -10,15 +10,15 @@ export default defineEventHandler(async (event) => {
         return;
     }
     const body = await readBody(event);
-    if (!body.name || !body.id_pole_average || !body.coefficient) {
-        setResponseStatus(event, 422, 'Invalid body error {name, id_pole_average, coefficient}');
+    if (!body.name || !body.idPoleAverage || !body.coefficient) {
+        setResponseStatus(event, 422, 'Invalid body error {name, idPoleAverage, coefficient}');
         return;
     }
     const subject = await prisma.subject.create({
         data: {
             name: body.name,
             coefficient: body.coefficient,
-            idPoleAverage: body.id_pole_average
+            idPoleAverage: body.idPoleAverage
         }
     });
     if (!subject){
@@ -26,5 +26,5 @@ export default defineEventHandler(async (event) => {
         return;
     }
     setResponseStatus(event, 201, 'Subject created');
-    return;
+    return subject;
 });

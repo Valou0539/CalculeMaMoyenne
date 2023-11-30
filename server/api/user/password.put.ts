@@ -11,8 +11,8 @@ export default defineEventHandler(async (event) => {
         return;
     }
     const body = await readBody(event);
-    if (!body.password || !body.new_password || body.new_password.length < 5) {
-        setResponseStatus(event, 422, 'Invalid body error {password, new_password}');
+    if (!body.password || !body.newPassword || body.newPassword.length < 5) {
+        setResponseStatus(event, 422, 'Invalid body error {password, newPassword}');
         return;
     }
     const payload = verifyToken(<string>getHeader(event, 'Authorization'))
@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
         setResponseStatus(event, 401, 'Unauthorized, invalid password');
         return;
     }
-    const hashed_password = await hash(body.new_password, 10);
+    const hashed_password = await hash(body.newPassword, 10);
     const password = await prisma.user.update({
         where: {
             id: payload.user_id
