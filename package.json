@@ -11,6 +11,7 @@
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
+    "@nuxt/test-utils": "^3.8.1",
     "@nuxtjs/color-mode": "^3.3.2",
     "@nuxtjs/tailwindcss": "^6.10.1",
     "@pinia-plugin-persistedstate/nuxt": "^1.2.0",
@@ -19,10 +20,12 @@
     "@types/node": "^20.9.3",
     "nuxt": "^3.8.2",
     "nuxt-icon": "^0.6.6",
+    "nuxt-vitest": "^0.11.5",
     "pinia": "^2.1.7",
     "prisma": "^5.6.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.3.2",
+    "vitest": "^0.33.0",
     "vue": "^3.3.8",
     "vue-router": "^4.2.5"
   },
