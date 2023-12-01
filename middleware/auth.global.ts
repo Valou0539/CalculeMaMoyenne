@@ -31,6 +31,7 @@ export default defineNuxtRouteMiddleware( async (to, from) => {
             if (userPath.includes(to.path) || to.path.startsWith('/api/')) return;
             else return navigateTo('/mes-notes');
         default:
+            authStore.setToken(null);
             if (unauthenticatedPath.includes(to.path) || to.path.startsWith('/api/')) return;
             else return navigateTo('/');
     }
