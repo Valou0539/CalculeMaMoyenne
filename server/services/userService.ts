@@ -49,6 +49,7 @@ export const Roles: { [key in RolesEnum]: Role } = {
             PermissionsEnum.ReadOwnSelf,
             PermissionsEnum.UpdateOwnSelf,
             PermissionsEnum.DeleteOwnSelf,
+            PermissionsEnum.CreateOwnSelfGrades,
             PermissionsEnum.ReadOwnSelfGrades,
             PermissionsEnum.UpdateOwnSelfGrades,
             PermissionsEnum.DeleteOwnSelfGrades
