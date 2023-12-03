@@ -18,6 +18,7 @@
           @input="$emit('update:modelValue', $event.target.value)"
           class="w-full bg-secondary-button dark:bg-secondary-button-dark text-base px-4 py-3"
           :step="type === 'number' ? 0.5 : null"
+          :min="type === 'number' ? 0 : null"
       />
       <button
           v-if="type === 'password' && !showPassword"
@@ -74,8 +75,7 @@ const props = defineProps({
     default: "off",
   },
   modelValue: {
-    type: String,
-    default: "",
+    default: null,
   },
   placeholder: {
     type: String,

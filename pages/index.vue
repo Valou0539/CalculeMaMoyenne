@@ -98,7 +98,7 @@ const login = async () => {
     watch: false
   });
   console.log(response);
-  if (response.data.value.token) {
+  if (response.status.value === "success") {
     const authStore = useAuthStore();
     authStore.setToken(response.data.value.token);
 

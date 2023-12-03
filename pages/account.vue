@@ -19,13 +19,7 @@
         </button>
       </form>
       <form @submit.prevent="changePassword" class="mb-16">
-        <CustomInput
-            name="pseudo"
-            label="Pseudonyme"
-            type="text"
-            class="hidden"
-            autoComplete="username"
-        />
+        <input aria-label="Pseudo actuel" class="hidden" type="text" autocomplete="username">
         <CustomInput
             name="password"
             label="Mot de passe"
