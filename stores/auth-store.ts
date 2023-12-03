@@ -25,7 +25,7 @@ export const useAuthStore = defineStore({
         isAuthenticated: (state) => isAuthenticated(state.token),
     },
     actions: {
-        setToken(token: string){
+        setToken(token: string | null){
             this.token = token
         }
     },
