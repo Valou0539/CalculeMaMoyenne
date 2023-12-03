@@ -170,6 +170,8 @@ export default defineEventHandler(async (event) => {
 
     userAcademicYears.forEach((academicYear: AcademicYear) => {
         academicYear.Semester.forEach((semester: Semester) => {
+            let unitTotal = 0;
+            let unitTotalCoefficient = 0;
             semester.Unit.forEach((unit: Unit) => {
                 let polesTotal = 0;
                 let polesTotalCoefficient = 0;
@@ -223,7 +225,16 @@ export default defineEventHandler(async (event) => {
                 } else {
                     unit.average = polesTotal / polesTotalCoefficient;
                 }
+                if (unit.average){
+                    unitTotal += unit.average;
+                    unitTotalCoefficient += 1;
+                }
             });
+            if (unitTotalCoefficient === 0) {
+                semester.average = null;
+            } else {
+                semester.average = unitTotal / unitTotalCoefficient;
+            }
         });
     });
 
