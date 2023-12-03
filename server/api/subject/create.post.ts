@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
         return;
     }
     const body = await readBody(event);
-    if (!body.name || !body.idPoleAverage || !body.coefficient) {
+    if (!body.name || !body.idPoleAverage || body.coefficient === undefined) {
         setResponseStatus(event, 422, 'Invalid body error {name, idPoleAverage, coefficient}');
         return;
     }

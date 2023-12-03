@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
         return;
     }
     const body = await readBody(event);
-    if (!body.value || !body.coefficient || !body.idGradeGroup) {
+    if (body.value === undefined || body.coefficient === undefined || !body.idGradeGroup) {
         setResponseStatus(event, 422, 'Invalid body error {value, coefficient, idGradeGroup}');
         return;
     }

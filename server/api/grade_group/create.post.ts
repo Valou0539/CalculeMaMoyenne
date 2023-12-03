@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
         return;
     }
     const body = await readBody(event);
-    if (!body.name || !body.coefficient || !body.idSubject) {
+    if (!body.name || body.coefficient === undefined || !body.idSubject) {
         setResponseStatus(event, 422, 'Invalid body error (name, coefficient, idSubject)');
         return;
     }
