@@ -11,6 +11,7 @@
       </div>
       <form class="lg:w-[356px] flex-shrink-0" @submit.prevent="login">
         <CustomInput
+            id="pseudo"
             name="pseudo"
             label="Pseudonyme"
             type="text"
@@ -21,6 +22,7 @@
             :error="pseudoError"
         />
         <CustomInput
+            id="password"
             name="password"
             label="Mot de passe"
             type="password"
@@ -65,6 +67,7 @@
         </AppAdvantage>
       </div>
     </section>
+    <Loader v-if="showLoader" />
   </main>
 </template>
 
@@ -77,17 +80,20 @@ const password = ref("");
 const pseudoError = ref("");
 const passwordError = ref("");
 
+const showLoader = ref(false);
+
 const login = async () => {
+  pseudoError.value = "";
+  passwordError.value = "";
   if (pseudo.value === "") {
     pseudoError.value = "Pseudonyme Requis";
     return;
   }
-  pseudoError.value = "";
   if (password.value.length < 5) {
     passwordError.value = "Mot de passe trop court";
     return;
   }
-  passwordError.value = "";
+  showLoader.value = true;
 
   const response = await useFetch('/api/user/login', {
     method: 'POST',
@@ -97,12 +103,24 @@ const login = async () => {
     },
     watch: false
   });
-  console.log(response);
   if (response.status.value === "success") {
     const authStore = useAuthStore();
     authStore.setToken(response.data.value.token);
 
     navigateTo('/mes-notes');
+  } else {
+    switch (response.error.value.statusCode) {
+      case 401:
+        passwordError.value = "Mot de passe incorrect";
+        break;
+      case 404:
+        pseudoError.value = "Pseudonyme incorrect";
+        break;
+      default:
+        passwordError.value = "Une erreur est survenue";
+        break;
+    }
   }
+  showLoader.value = false;
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div :class="`${backgroundAndTextColors} ${!!backgroundAndTextColors ? 'px-2 py-1 rounded-lg' : ''}`">
-    <span v-if="average" class="font-bold" :class="numeratorTextSize">
+    <span v-if="average !== null" class="font-bold" :class="numeratorTextSize">
       {{ average.toFixed(2) }}<span class="font-normal" :class="denominatorTextSize">/20.0</span>
     </span>
     <span v-else :class="numeratorTextSize">0 note</span>

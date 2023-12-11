@@ -38,7 +38,7 @@
           <LevelForm
               v-if="role === 'admin'"
               apiRoot="unit"
-              levelName="unit"
+              :levelName="'unit' + id"
               levelLabel="Nom de l'unité"
               :isLevelCoefficient="false"
               :editLevelId="editUnitId"

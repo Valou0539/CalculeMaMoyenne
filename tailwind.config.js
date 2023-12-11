@@ -20,6 +20,10 @@ module.exports = {
         background: {
           DEFAULT: "#FAFAFA",
           dark: "#050505",
+          'bento-grid': {
+            DEFAULT: "#F0F3F7",
+            dark: "#1C1E2D",
+          }
         },
         text: {
           DEFAULT: "#000",
@@ -40,10 +44,6 @@ module.exports = {
         },
         delete: {
           DEFAULT: "#B40000",
-          text: "#fff",
-        },
-        valid: {
-          DEFAULT: "#00AD00",
           text: "#fff",
         },
         error: {

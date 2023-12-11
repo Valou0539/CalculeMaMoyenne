@@ -11,6 +11,7 @@
       </p>
       <form @submit.prevent="register">
         <CustomInput
+            id="pseudo"
             name="pseudo"
             label="Pseudonyme"
             type="text"
@@ -21,6 +22,7 @@
             :error="pseudoError"
         />
         <CustomInput
+            id="password"
             name="password"
             label="Mot de passe"
             type="password"
@@ -30,6 +32,7 @@
             autoComplete="new-password"
         />
         <CustomInput
+            id="passwordConfirmation"
             name="passwordConfirmation"
             label="Répétition du mot de passe"
             type="password"
@@ -52,6 +55,7 @@
         </div>
       </form>
     </section>
+    <Loader v-if="showLoader" />
   </main>
 </template>
 
@@ -65,12 +69,15 @@ const passwordConfirmation = ref('');
 const pseudoError = ref('');
 const passwordError = ref('');
 
+const showLoader = ref(false);
+
 const register = async () => {
+  pseudoError.value = '';
+  passwordError.value = '';
   if (!pseudo.value) {
     pseudoError.value = 'Pseudonyme Requis';
     return;
   }
-  pseudoError.value = '';
   if (password.value.length < 5) {
     passwordError.value = 'Le mot de passe doit faire au moins 5 caractères';
     return;
@@ -78,7 +85,7 @@ const register = async () => {
     passwordError.value = 'Les mots de passe ne sont pas identiques';
     return;
   }
-  passwordError.value = '';
+  showLoader.value = true;
 
   const response = await useFetch('/api/user/register', {
     method: 'POST',
@@ -89,11 +96,21 @@ const register = async () => {
     watch: false
   });
 
-  if (response.data.value.token) {
+  if (response.status.value === 'success') {
     const authStore = useAuthStore();
     authStore.setToken(response.data.value.token);
 
     navigateTo('/mes-notes');
+  } else {
+    switch (response.error.value.statusCode) {
+      case 401:
+        pseudoError.value = 'Ce pseudonyme est déjà utilisé';
+        break;
+      default:
+        pseudoError.value = 'Une erreur est survenue';
+        break;
+    }
   }
+  showLoader.value = false;
 }
 </script>

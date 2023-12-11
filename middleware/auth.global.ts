@@ -23,6 +23,7 @@ const adminPath :string[] = [
 export default defineNuxtRouteMiddleware( async (to, from) => {
     const authStore = useAuthStore();
     if (!authStore && to.path !== '/') return;
+    if (!adminPath.includes(to.path) && !userPath.includes(to.path) && !unauthenticatedPath.includes(to.path)) return;
     switch ((await authStore.isAuthenticated).role) {
         case 'admin':
             if (adminPath.includes(to.path) || to.path.startsWith('/api/')) return;

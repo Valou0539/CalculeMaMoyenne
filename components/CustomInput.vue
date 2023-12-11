@@ -62,6 +62,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  id: {
+    type: String,
+    required: true,
+  },
   label: {
     type: String,
     required: true,

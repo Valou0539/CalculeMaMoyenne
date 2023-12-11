@@ -1,7 +1,7 @@
 <template>
   <div class="mb-2">
     <div class="w-full flex justify-between items-center mb-4">
-      <div @click="isFolded = !isFolded" role="button" class="flex items-center">
+      <div @click="isFolded = !isFolded" :role="role === 'user' ? 'button' : 'none'" class="flex items-center">
         <Icon
             v-if="role === 'user'"
             name="mdi:chevron-right"
@@ -59,44 +59,55 @@
         />
         <form
             @submit.prevent="addOrEditGradeGroup"
-            class="border border-secondary-button dark:border-secondary-button-dark py-2 px-1 flex flex-col sm:flex-row md:flex-col lg:flex-row items-end sm:items-center md:items-end lg:items-center gap-2 justify-end"
+            class="border border-secondary-button dark:border-secondary-button-dark py-2 px-1 flex flex-col items-end gap-2"
         >
-          <div class="flex items-center gap-1 flex-wrap justify-end">
-            <label for="gradeGroupName">Nom du groupe :</label>
-            <input
-                v-model="gradeGroupName"
-                id="gradeGroupName"
-                type="text"
-                class="border border-accent py-1 px-2 w-28 block border-none bg-secondary-button dark:bg-secondary-button-dark text-secondary-button-text dark:text-secondary-button-text-dark"
-            />
-          </div>
-          <div class="flex items-center gap-1 flex-wrap justify-end">
-            <label for="gradeGroupCoef">Coefficient :</label>
-            <input
-                v-model="gradeGroupCoef"
-                type="number"
-                step="0.5"
-                min="0"
-                id="gradeGroupCoef"
-                class="border border-accent py-1 px-2 w-14 border-none bg-secondary-button dark:bg-secondary-button-dark text-secondary-button-text dark:text-secondary-button-text-dark"
-            />
-          </div>
-          <div class="flex items-center gap-1">
-            <button
-                v-if="editGradeGroupId"
-                @click.prevent="
+          <div class="flex flex-col sm:flex-row md:flex-col lg:flex-row items-end sm:items-center md:items-end lg:items-center gap-2">
+            <div class="flex items-center gap-1 flex-wrap justify-end">
+              <label :for="'gradeGroup' + id + 'Name'">Nom du groupe :</label>
+              <input
+                  v-model="gradeGroupName"
+                  :id="'gradeGroup' + id + 'Name'"
+                  type="text"
+                  class="border border-accent py-1 px-2 w-28 block border-none bg-secondary-button dark:bg-secondary-button-dark text-secondary-button-text dark:text-secondary-button-text-dark"
+              />
+            </div>
+            <div class="flex items-center gap-1 flex-wrap justify-end">
+              <label :for="'gradeGroup' + id + 'Coef'">Coefficient :</label>
+              <input
+                  v-model="gradeGroupCoef"
+                  type="number"
+                  step="0.5"
+                  min="0"
+                  :id="'gradeGroup' + id + 'Coef'"
+                  class="border border-accent py-1 px-2 w-14 border-none bg-secondary-button dark:bg-secondary-button-dark text-secondary-button-text dark:text-secondary-button-text-dark"
+              />
+            </div>
+            <div class="flex items-center gap-1">
+              <button
+                  v-if="editGradeGroupId"
+                  @click.prevent="
                   gradeGroupName = null;
                   gradeGroupCoef = null;
                   editGradeGroupId = null;
                 "
-                class="bg-secondary-button dark:bg-secondary-button-dark text-secondary-button-text dark:text-secondary-button-text-dark p-1 rounded"
-            >
-              <Icon style="display: block" name="maki:cross" size="20px" />
-            </button>
-            <button type="submit" class="bg-primary-button text-primary-button-text px-1 py-0.5 rounded">
-              {{ !editGradeGroupId ? 'Ajouter' : 'Modifier' }}
-            </button>
+                  class="bg-secondary-button dark:bg-secondary-button-dark text-secondary-button-text dark:text-secondary-button-text-dark p-1 rounded"
+              >
+                <Icon style="display: block" name="maki:cross" size="20px" />
+              </button>
+              <button type="submit" class="bg-primary-button text-primary-button-text px-1 py-0.5 rounded flex gap-1 items-center">
+                <Icon v-if="loading" class="animate-spin" name="tabler:loader-2" size="26px" />
+                {{
+                  loading ?
+                      !editGradeGroupId
+                          ? 'Ajout en cours' : 'Modification en cours'
+                      : !editGradeGroupId
+                          ? 'Ajouter' : 'Modifier'
+                }}
+              </button>
+            </div>
           </div>
+
+          <p v-if="formError" class="text-error dark:text-error-dark text-sm ml-auto">{{ formError }}</p>
         </form>
       </div>
     </Transition>
@@ -144,6 +155,8 @@ const editGradeGroupId = ref(null);
 const gradeGroupName = ref(null);
 const gradeGroupCoef = ref(null);
 
+const loading = ref(false);
+const formError = ref(null);
 
 const deleteSubject = async () => {
   const response = await useFetch(`api/subject/remove`, {
@@ -160,11 +173,22 @@ const deleteSubject = async () => {
 };
 
 const addOrEditGradeGroup = async () => {
+  formError.value = null;
+  if (!gradeGroupName.value) {
+    formError.value = 'Nom requis';
+    return;
+  }
+  if (gradeGroupCoef.value === null) {
+    formError.value = 'Coefficient requis';
+    return;
+  }
+  loading.value = true;
   if (editGradeGroupId.value) {
     await editGradeGroup()
   } else {
     await addGradeGroup()
   }
+  loading.value = false;
 };
 
 async function addGradeGroup() {
@@ -184,6 +208,8 @@ async function addGradeGroup() {
     gradeGroupName.value = null;
     gradeGroupCoef.value = null;
     emit('reloadLevels');
+  } else {
+    formError.value = 'Une erreur est survenue';
   }
 }
 
@@ -205,6 +231,8 @@ async function editGradeGroup() {
     gradeGroupCoef.value = null;
     editGradeGroupId.value = null;
     emit('reloadLevels');
+  } else {
+    formError.value = 'Une erreur est survenue';
   }
 }
 </script>

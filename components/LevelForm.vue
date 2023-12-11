@@ -9,6 +9,7 @@
         autoComplete="off"
         v-model="name"
         class="mb-4"
+        :error="nameError"
     />
 
     <CustomInput
@@ -21,10 +22,11 @@
         autoComplete="off"
         v-model="coef"
         class="mb-4"
+        :error="coefError"
     />
     <div class="flex gap-2">
       <button
-          v-if="editLevelId"
+          v-if="editLevelId && !loading"
           @click.prevent="
             name = '';
             coef = null;
@@ -35,8 +37,15 @@
       >
         <Icon name="maki:cross" size="26px" />
       </button>
-      <button type="submit" class="bg-primary-button text-primary-button-text px-4 py-2 rounded w-full text-lg flex-grow">
-        {{ !editLevelId ? 'Ajouter' : 'Modifier' }}
+      <button type="submit" class="bg-primary-button text-primary-button-text px-4 py-2 rounded w-full text-lg flex-grow flex items-center justify-center gap-1">
+        <Icon v-if="loading" class="animate-spin" name="tabler:loader-2" size="26px" />
+        {{
+          loading ?
+            !editLevelId
+              ? 'Ajout en cours' : 'Modification en cours'
+            : !editLevelId
+              ? 'Ajouter' : 'Modifier'
+        }}
       </button>
     </div>
   </form>
@@ -88,12 +97,29 @@ const id = ref(props.editLevelId);
 const name = ref(props.editLevelName);
 const coef = ref(props.editLevelCoefficient);
 
-const addOrEditLevel = () => {
-  if (props.editLevelId) {
-    editLevel()
-  } else {
-    addLevel()
+const nameError = ref(null);
+const coefError = ref(null);
+
+const loading = ref(false);
+
+const addOrEditLevel = async () => {
+  nameError.value = null;
+  coefError.value = null;
+  if (!name.value) {
+    nameError.value = 'Nom requis';
+    return;
   }
+  if (props.isLevelCoefficient && coef.value === null) {
+    coefError.value = 'Coefficient requis';
+    return;
+  }
+  loading.value = true;
+  if (props.editLevelId) {
+    await editLevel()
+  } else {
+    await addLevel()
+  }
+  loading.value = false;
 };
 
 const addLevel = async () => {

@@ -19,7 +19,6 @@
         </nav>
       </div>
       <div v-if="levels.length" class="flex-grow">
-        {{ levels.find(level => level.id === activeAcademicYear).Semester[1] }}
         <LevelsSemester
             v-for="semester in levels.find(level => level.id === activeAcademicYear).Semester"
             :key="semester.id"

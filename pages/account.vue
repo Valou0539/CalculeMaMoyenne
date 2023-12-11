@@ -6,6 +6,7 @@
       </h2>
       <form @submit.prevent="changePseudo" class="mb-8">
         <CustomInput
+            id="new-pseudo"
             name="new-pseudo"
             label="Changer le pseudonyme"
             type="text"
@@ -19,8 +20,9 @@
         </button>
       </form>
       <form @submit.prevent="changePassword" class="mb-16">
-        <input aria-label="Pseudo actuel" class="hidden" type="text" autocomplete="username">
+        <input aria-label="Pseudo actuel" class="hidden" :value="pseudo" type="text" autocomplete="username">
         <CustomInput
+            id="password"
             name="password"
             label="Mot de passe"
             type="password"
@@ -31,6 +33,7 @@
             :error="passwordError"
         />
         <CustomInput
+            id="newPassword"
             name="newPassword"
             label="Nouveau mot de passe"
             type="password"
@@ -40,6 +43,7 @@
             autoComplete="new-password"
         />
         <CustomInput
+            id="newPasswordConfirmation"
             name="newPasswordConfirmation"
             label="Répétition du mot de passe"
             type="password"
@@ -60,6 +64,7 @@
         Supprimer le compte
       </button>
     </section>
+    <Loader v-if="showLoader" />
   </main>
 </template>
 
@@ -79,6 +84,8 @@ const pseudoError = ref('');
 const passwordError = ref('');
 const newPasswordError = ref('');
 
+const showLoader = ref(false);
+
 async function getPseudo() {
   const {data} = await useFetch('/api/user/ownself', {
     headers: {
@@ -96,6 +103,7 @@ const changePseudo = async () => {
     return;
   }
   pseudoError.value = '';
+  showLoader.value = true;
 
   const response = await useFetch('/api/user/rename', {
     method: 'PUT',
@@ -111,16 +119,25 @@ const changePseudo = async () => {
   if (response.status.value === "success") {
     pseudo.value = newPseudo.value;
     newPseudo.value = '';
+  } else {
+    switch (response.error.value.statusCode) {
+      case 401:
+        pseudoError.value = 'Ce pseudonyme est déjà pris';
+        break;
+      default:
+        pseudoError.value = 'Une erreur est survenue';
+    }
   }
+  showLoader.value = false;
 }
 
 const changePassword = async () => {
+  passwordError.value = '';
+  newPasswordError.value = '';
   if (password.value.length < 5) {
     passwordError.value = 'L\'ancien mot de passe doit faire au moins 5 caractères';
     return;
   }
-  passwordError.value = '';
-
   if (newPassword.value.length < 5) {
     newPasswordError.value = 'Le nouveau mot de passe doit faire au moins 5 caractères';
     return;
@@ -128,7 +145,7 @@ const changePassword = async () => {
     newPasswordError.value = 'Les nouveaux mots de passe ne sont pas identiques';
     return;
   }
-  newPasswordError.value = '';
+  showLoader.value = true;
 
   const response = await useFetch('/api/user/password', {
     method: 'PUT',
@@ -137,7 +154,7 @@ const changePassword = async () => {
     },
     body: {
       password: password.value,
-      new_password: newPassword.value,
+      newPassword: newPassword.value,
     },
     watch: false
   });
@@ -146,11 +163,20 @@ const changePassword = async () => {
     password.value = '';
     newPassword.value = '';
     newPasswordConfirmation.value = '';
+  } else {
+    switch (response.error.value.statusCode) {
+      case 401:
+        passwordError.value = 'Mot de passe incorrect';
+        break;
+      default:
+        newPasswordError.value = 'Une erreur est survenue';
+    }
   }
+  showLoader.value = false;
 }
 
 const disconnect = () => {
-  authStore.setToken('');
+  authStore.setToken(null);
   navigateTo('/');
 }
 
@@ -165,7 +191,7 @@ const deleteAccount = async () => {
     },
     watch: false
   });
-  authStore.setToken('');
+  authStore.setToken(null);
   navigateTo('/');
 }
 </script>

@@ -24,7 +24,7 @@
       <LevelForm
         v-if="role === 'admin'"
         apiRoot="subject"
-        levelName="subject"
+        :levelName="'subject' + id"
         levelLabel="Nom de la matière"
         :isLevelCoefficient="true"
         :editLevelId="editSubjectId"
