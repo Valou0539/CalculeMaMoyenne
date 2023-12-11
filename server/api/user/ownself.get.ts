@@ -185,7 +185,7 @@ export default defineEventHandler(async (event) => {
                             let gradesTotal = 0;
                             let gradesTotalCoefficient = 0;
                             gradeGroup.Grade.forEach((grade: Grade) => {
-                                if (grade.value && grade.coefficient){
+                                if (grade.value  !== null && grade.coefficient  !== null){
                                     gradesTotal += grade.value * grade.coefficient;
                                     gradesTotalCoefficient += grade.coefficient;
                                 }
@@ -195,7 +195,7 @@ export default defineEventHandler(async (event) => {
                             } else {
                                 gradeGroup.average = gradesTotal / gradesTotalCoefficient;
                             }
-                            if (gradeGroup.average){
+                            if (gradeGroup.average  !== null){
                                 gradeGroupsTotal += gradeGroup.average * gradeGroup.coefficient;
                                 gradeGroupsTotalCoefficient += gradeGroup.coefficient;
                             }
@@ -205,7 +205,7 @@ export default defineEventHandler(async (event) => {
                         } else {
                             subject.average = gradeGroupsTotal / gradeGroupsTotalCoefficient;
                         }
-                        if (subject.average){
+                        if (subject.average !== null){
                             subjectsTotal += subject.average * subject.coefficient;
                             subjectsTotalCoefficient += subject.coefficient;
                         }
@@ -215,7 +215,7 @@ export default defineEventHandler(async (event) => {
                     } else {
                         pole.average = subjectsTotal / subjectsTotalCoefficient;
                     }
-                    if (pole.average){
+                    if (pole.average !== null){
                         polesTotal += pole.average * pole.coefficient;
                         polesTotalCoefficient += pole.coefficient;
                     }
@@ -225,7 +225,7 @@ export default defineEventHandler(async (event) => {
                 } else {
                     unit.average = polesTotal / polesTotalCoefficient;
                 }
-                if (unit.average){
+                if (unit.average !== null){
                     unitTotal += unit.average;
                     unitTotalCoefficient += 1;
                 }
