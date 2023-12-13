@@ -1,6 +1,6 @@
 <template>
   <div class="border border-secondary-button dark:border-secondary-button-dark p-1 mb-2">
-    <div class="flex justify-between items-center border-b border-b-secondary-button dark:border-b-secondary-button-dark pb-1 mb-4">
+    <div class="flex justify-between items-center border-b border-b-secondary-button dark:border-b-secondary-button-dark pb-1 mb-4 gap-4">
       <h6 class="font-medium">
         {{ name }}
         <span class="text-xs font-light inline-block">Coef {{ coef.toFixed(1) }}</span>

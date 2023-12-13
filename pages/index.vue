@@ -43,29 +43,43 @@
             Je n’ai pas de compte, j’en crée un
           </NuxtLink>
         </div>
-
       </form>
     </section>
-    <section class="mt-12 mb-24 max-w-xl lg:max-w-4xl mx-auto">
-      <h2
-        class="text-[26px] sm:text-[32px] max-w-sm lg:max-w-none mx-auto font-header font-bold mb-12 lg:text-[42px] leading-tight text-center"
-      >
-        Pourquoi utiliser notre application
-      </h2>
-      <div class="grid justify-center lg:grid-cols-3 gap-6 mt-8 gap-x-16 gap-y-8">
-        <AppAdvantage iconName="mdi:secure-outline">
-          Toutes vos notes sont uniquement accessibles par vous. Personne y compris nous, ne peut voir ou accéder à vos
-          notes.
-        </AppAdvantage>
-        <AppAdvantage iconName="mdi:run-fast">
-          Tout se fait très rapidement, vous avez juste à retranscrire les groupes de notes et les notes de OGE vers
-          cette application et nous nous chargeons de tous les calculs pour vous
-        </AppAdvantage>
-        <AppAdvantage iconName="tabler:eye-star">
-          L’interface est simple d’utilisation et épurée, elle contient également un mode clair et sombre selon vos
-          préférences
-        </AppAdvantage>
-      </div>
+    <section class="mt-12 mb-24 sm:max-w-xl lg:max-w-4xl mx-auto grid sm:grid-cols-2 gap-8 max-w-[400px]">
+      <AppAdvantage class="sm:row-span-2">
+        <div>
+          <h2 class="text-[32px] sm:text-[40px] lg:text-[50px] font-header font-bold tracking-tight">
+            Les points <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary-button to-accent">forts</span> de Calcule Ma <span class="pr-8">Moyenne</span>
+          </h2>
+          <NuxtImg class="absolute z-50 bottom-[-20px] right-[-12px] sm:right-[-20px] w-16 h-16 sm:w-[104px] sm:h-[104px]" src="/img/logo.png" width="104" height="104" alt="" />
+        </div>
+      </AppAdvantage>
+      <AppAdvantage>
+        <div class="flex gap-4 items-center w-full justify-between">
+          <p class="font-header text-[26px] lg:text-[32px] tracking-tight lg:tracking-normal">Vos données sont toutes sécurisées</p>
+          <Icon class="w-16 h-16 lg:w-20 lg:h-20 text-accent opacity-20 flex-shrink-0" name="material-symbols:lock" />
+        </div>
+      </AppAdvantage>
+      <AppAdvantage>
+        <div class="flex gap-4 items-center w-full justify-between">
+          <Icon class="w-16 h-16 lg:w-20 lg:h-20 text-accent opacity-20 flex-shrink-0" name="akar-icons:thunder" />
+          <p class="font-header text-[26px] lg:text-[32px] tracking-tight lg:tracking-normal">Ajouter vos notes en quelque clics</p>
+        </div>
+      </AppAdvantage>
+      <AppAdvantage class="sm:col-span-2">
+        <div class="w-full flex flex-col-reverse gap-4 min-[400px]:flex-row">
+          <div class="flex flex-row-reverse gap-4 justify-between min-[400px]:block flex-shrink min-[400px]:max-w-[160px] lg:max-w-[212px]">
+            <p class="font-header min-[400px]:mb-2 text-[26px] lg:text-[32px] tracking-tight lg:tracking-normal flex-grow-0">
+              Une interface simple
+              <Icon class="w-12 h-12 lg:w-16 lg:h-16 rotate-[-90deg] min-[400px]:rotate-0" name="pepicons-print:arrow-right" />
+              <span class="inline-block">et intuitive</span>
+            </p>
+            <Icon class="w-16 h-16 lg:w-20 lg:h-20 text-accent opacity-20 flex-shrink-0" name="tabler:eye-star" />
+          </div>
+          <div class="app-preview flex-grow aspect-square min-[400px]:aspect-auto">
+          </div>
+        </div>
+      </AppAdvantage>
     </section>
     <Loader v-if="showLoader" />
   </main>

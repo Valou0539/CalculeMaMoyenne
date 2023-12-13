@@ -6,6 +6,10 @@
 
 
 @layer utilities {
+    .app-preview {
+        @apply bg-cover bg-top bg-no-repeat bg-[url('/img/app-mobile.png')] dark:bg-[url('/img/app-mobile-dark.png')] sm:bg-[url('/img/app-tablet.png')] sm:dark:bg-[url('/img/app-tablet-dark.png')] lg:bg-[url('/img/app-desktop.png')] lg:dark:bg-[url('/img/app-desktop-dark.png')];
+    }
+
     .color-sheme-only-light {
         color-scheme: only light;
     }

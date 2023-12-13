@@ -1,6 +1,6 @@
 <template>
   <div class="mb-4 bg-primary-button/10 p-1 rounded-lg">
-    <div class="w-full flex justify-between items-center mb-4 p-1 border border-accent rounded">
+    <div class="w-full flex justify-between items-center mb-4 p-1 border border-accent rounded gap-4">
       <h4 class="lg:text-xl font-header font-medium">
         {{ name }}
         <span class="text-xs font-light inline-block">Coef {{ coef }}</span>

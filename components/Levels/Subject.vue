@@ -1,6 +1,6 @@
 <template>
   <div class="mb-2">
-    <div class="w-full flex justify-between items-center mb-4">
+    <div class="w-full flex justify-between items-center mb-4 gap-4">
       <div @click="isFolded = !isFolded" :role="role === 'user' ? 'button' : 'none'" class="flex items-center">
         <Icon
             v-if="role === 'user'"
