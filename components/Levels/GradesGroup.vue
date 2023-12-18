@@ -34,7 +34,7 @@
         <div class="flex flex-col sm:flex-row md:flex-col lg:flex-row items-end sm:items-center md:items-end lg:items-center gap-2 justify-end">
           <div class="flex items-center gap-1 flex-wrap justify-end">
             <label :for="'grade' + id + 'Value'">Note :</label>
-            <div class="flex items-center border border-accent py-1 px-2 block border-none bg-secondary-button dark:bg-secondary-button-dark text-secondary-button-text dark:text-secondary-button-text-dark">
+            <div class="flex items-center border border-accent py-1 px-2 border-none bg-secondary-button dark:bg-secondary-button-dark text-secondary-button-text dark:text-secondary-button-text-dark">
               <input
                   v-model="gradeValue"
                   :id="'grade' + id + 'Value'"
@@ -63,7 +63,7 @@
                 v-if="editGradeId"
                 @click.prevent="
                   gradeValue = null;
-                  gradeCoef = null;
+                  gradeCoef = 1;
                   editGradeId = null;
                 "
                 class="bg-secondary-button dark:bg-secondary-button-dark text-secondary-button-text dark:text-secondary-button-text-dark p-1 rounded"
@@ -121,7 +121,7 @@ const props = defineProps({
 const emit = defineEmits(['editGradesGroup', 'reloadLevels']);
 
 const gradeValue = ref(null);
-const gradeCoef = ref(null);
+const gradeCoef = ref(1);
 const editGradeId = ref(null);
 
 const loading = ref(false);
@@ -176,7 +176,7 @@ async function addGrade() {
   })
   if (response.status.value === "success") {
     gradeValue.value = null;
-    gradeCoef.value = null;
+    gradeCoef.value = 1;
     emit('reloadLevels');
   } else {
     formError.value = 'Une erreur est survenue';
@@ -198,7 +198,7 @@ async function editGrade() {
   })
   if (response.status.value === "success") {
     gradeValue.value = null;
-    gradeCoef.value = null;
+    gradeCoef.value = 1;
     editGradeId.value = null;
     emit('reloadLevels');
   } else {
