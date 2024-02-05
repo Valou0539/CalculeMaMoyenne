@@ -161,6 +161,7 @@ export default defineEventHandler(async (event) => {
         id: number,
         name: string,
         average?: number | null,
+        coefficient: number,
         createdAt: Date,
         updatedAt: Date,
         PoleAverage: PoleAverage[]
@@ -241,8 +242,8 @@ export default defineEventHandler(async (event) => {
                     unit.average = polesTotal / polesTotalCoefficient;
                 }
                 if (unit.average !== null){
-                    unitTotal += unit.average;
-                    unitTotalCoefficient += 1;
+                    unitTotal += unit.average * unit.coefficient;
+                    unitTotalCoefficient += unit.coefficient;
                 }
             });
             if (unitTotalCoefficient === 0) {
