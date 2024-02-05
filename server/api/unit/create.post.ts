@@ -10,13 +10,14 @@ export default defineEventHandler(async (event) => {
         return;
     }
     const body = await readBody(event);
-    if (!body.name || !body.idSemester) {
-        setResponseStatus(event, 422, 'Invalid body error {name, idSemester}');
+    if (!body.name || !body.idSemester || body.coefficient === null) {
+        setResponseStatus(event, 422, 'Invalid body error {name, idSemester, coefficient}');
         return;
     }
     const unit = await prisma.unit.create({
         data: {
             name: body.name,
+            coefficient: body.coefficient,
             idSemester: body.idSemester
         }
     });

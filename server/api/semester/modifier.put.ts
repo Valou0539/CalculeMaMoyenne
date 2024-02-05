@@ -24,16 +24,16 @@ export default defineEventHandler(async (event) => {
         return;
     }
     const body = await readBody(event);
-    if ((!body.bonus && !body.malus) || !body.id_semester) {
+    if ((body.bonus === null && body.malus === null) || !body.id_semester) {
         setResponseStatus(event, 422, 'Invalid body error {bonus?, malus?, id_semester}');
         return;
     }
     const updateData: { bonus?: number, malus?: number } = {};
 
-    if (body.bonus) {
+    if (body.bonus !== null) {
         updateData.bonus = body.bonus;
     }
-    if (body.malus) {
+    if (body.malus !== null) {
         updateData.malus = body.malus;
     }
 
