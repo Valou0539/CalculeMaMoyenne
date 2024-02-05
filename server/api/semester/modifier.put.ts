@@ -37,14 +37,38 @@ export default defineEventHandler(async (event) => {
         updateData.malus = body.malus;
     }
 
-    const userSemester = await prisma.userSemester.updateMany({
+    const userSemester = await prisma.userSemester.findMany({
+        where: {
+            idUser: user.id,
+            idSemester: body.id_semester
+        }
+    })
+
+    if (!userSemester){
+        const userSemesterCreated = await prisma.userSemester.create({
+            data: {
+                idUser: user.id,
+                idSemester: body.id_semester,
+                bonus: body.bonus,
+                malus: body.malus
+            }
+        })
+        if (!userSemesterCreated){
+            setResponseStatus(event, 503, 'An error occurred while creating the user semester');
+            return;
+        }
+        setResponseStatus(event, 201, 'User semester created');
+        return;
+    }
+
+    const userSemesterUpdated = await prisma.userSemester.updateMany({
         where: {
             idUser: user.id,
             idSemester: body.id_semester
         },
         data: updateData
     })
-    if (!userSemester){
+    if (!userSemesterUpdated){
         setResponseStatus(event, 503, 'An error occurred while updating the user semester');
         return;
     }
