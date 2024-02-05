@@ -4,19 +4,16 @@ const unauthenticatedPath :string[] = [
     '/',
     '/index',
     '/login',
-    '/register',
-    '/doc'
+    '/register'
 ];
 const userPath :string[] = [
     '/mes-notes',
     '/logout',
-    '/doc',
     '/account'
 ];
 const adminPath :string[] = [
     '/admin-panel',
     '/logout',
-    '/doc',
     '/account'
 ];
 

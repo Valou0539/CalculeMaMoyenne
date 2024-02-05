@@ -1,0 +1,12 @@
+-- CreateTable
+CREATE TABLE "UserSemester" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "idUser" INTEGER NOT NULL,
+    "idSemester" INTEGER NOT NULL,
+    "Bonus" REAL NOT NULL DEFAULT 0,
+    "Malus" REAL NOT NULL DEFAULT 0,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    CONSTRAINT "UserSemester_idUser_fkey" FOREIGN KEY ("idUser") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "UserSemester_idSemester_fkey" FOREIGN KEY ("idSemester") REFERENCES "Semester" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);

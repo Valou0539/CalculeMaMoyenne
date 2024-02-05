@@ -30,7 +30,6 @@
     <slot/>
 
     <footer class="w-full flex items-center justify-center gap-x-12 gap-y-4 flex-wrap px-6  text-sm md:text-[15px] py-4">
-      <NuxtLink to="/doc" class=" font-light">Consulter la documentation</NuxtLink>
       <NuxtLink to="https://www.dev-boost.fr" target="_blank" class="flex items-center gap-1 font-light">
         Site réalisé par Dev Boost
         <Icon name="mdi:external-link" class="md:w-[18px] md:h-[18px]"  size="16px"/>

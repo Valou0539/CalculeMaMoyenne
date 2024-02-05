@@ -39,7 +39,7 @@
                   v-model="gradeValue"
                   :id="'grade' + id + 'Value'"
                   type="number"
-                  step="0.25"
+                  step="0.05"
                   min="0"
                   max="20"
                   class="bg-secondary-button dark:bg-secondary-button-dark border-none w-12 px-1 py-0.5 leading-none"
@@ -121,7 +121,7 @@ const props = defineProps({
 const emit = defineEmits(['editGradesGroup', 'reloadLevels']);
 
 const gradeValue = ref(null);
-const gradeCoef = ref(null);
+const gradeCoef = ref(1);
 const editGradeId = ref(null);
 
 const loading = ref(false);
@@ -176,7 +176,7 @@ async function addGrade() {
   })
   if (response.status.value === "success") {
     gradeValue.value = null;
-    gradeCoef.value = null;
+    gradeCoef.value = 1;
     emit('reloadLevels');
   } else {
     formError.value = 'Une erreur est survenue';
@@ -198,7 +198,7 @@ async function editGrade() {
   })
   if (response.status.value === "success") {
     gradeValue.value = null;
-    gradeCoef.value = null;
+    gradeCoef.value = 1;
     editGradeId.value = null;
     emit('reloadLevels');
   } else {

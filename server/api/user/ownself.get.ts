@@ -98,6 +98,20 @@ export default defineEventHandler(async (event) => {
                                 }
                             }
                         }
+                    },
+                    UserSemester: {
+                        select: {
+                            id: true,
+                            bonus: true,
+                            malus: true,
+                            idSemester: false,
+                            idUser: false,
+                            createdAt: true,
+                            updatedAt: true,
+                        },
+                        where: {
+                            idUser: payload.user_id
+                        }
                     }
                 }
             }
