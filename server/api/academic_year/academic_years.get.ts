@@ -28,6 +28,7 @@ export default defineEventHandler(async (event) => {
                         select: {
                             id: true,
                             name: true,
+                            coefficient: true,
                             createdAt: true,
                             updatedAt: true,
                             idSemester: false,
