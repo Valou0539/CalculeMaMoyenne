@@ -27,6 +27,8 @@
             :name="semester.name"
             :token="authStore.token"
             :average="semester.average"
+            :bonus="semester.bonus"
+            :malus="semester.malus"
             @reloadLevels="
               reloadLevels();
             "

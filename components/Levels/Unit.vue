@@ -8,12 +8,16 @@
             class="w-5 h-5 inline-block transition-all duration-300 ease-in-out"
             :class="{'rotate-90': !isFolded}"
         />
-        <h3 class="text-lg lg:text-[26px] font-header font-semibold">{{ name }}</h3>
+        <h3 class="text-lg lg:text-[26px] font-header font-semibold">
+          {{ name }}
+          <span class="text-xs font-light inline-block">Coef {{ coef }}</span>
+        </h3>
       </div>
       <div class="flex-shrink-0 flex gap-4">
         <Average
             v-if="role === 'user'"
             :average="average"
+            :modifier="role === 'user' ? bonus - malus : null"
             numeratorTextSize="md:text-xl"
             denominatorTextSize="text-xs md:text-sm"
             backgroundAndTextColors="bg-secondary-button dark:bg-secondary-button-dark text-secondary-button-text dark:text-secondary-button-text-dark"
@@ -86,11 +90,23 @@ const props = defineProps({
     type: String,
     required: true
   },
+  coef: {
+    type: Number,
+    required: true
+  },
   id: {
     type: Number,
     required: true
   },
   average: {
+    type: Number,
+    required: false
+  },
+  bonus: {
+    type: Number,
+    required: false
+  },
+  malus: {
     type: Number,
     required: false
   },

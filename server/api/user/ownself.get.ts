@@ -99,20 +99,6 @@ export default defineEventHandler(async (event) => {
                                 }
                             }
                         }
-                    },
-                    UserSemester: {
-                        select: {
-                            id: true,
-                            bonus: true,
-                            malus: true,
-                            idSemester: false,
-                            idUser: false,
-                            createdAt: true,
-                            updatedAt: true,
-                        },
-                        where: {
-                            idUser: payload.user_id
-                        }
                     }
                 }
             }
@@ -171,6 +157,8 @@ export default defineEventHandler(async (event) => {
         id: number,
         name: string,
         average?: number | null,
+        bonus?: number | null,
+        malus?: number | null,
         createdAt: Date,
         updatedAt: Date,
         Unit: Unit[]
@@ -184,8 +172,9 @@ export default defineEventHandler(async (event) => {
         Semester: Semester[]
     }
 
-    userAcademicYears.forEach((academicYear: AcademicYear) => {
-        academicYear.Semester.forEach((semester: Semester) => {
+
+    await Promise.all(userAcademicYears.map(async (academicYear: AcademicYear) => {
+        await Promise.all(academicYear.Semester.map(async (semester: Semester) => {
             let unitTotal = 0;
             let unitTotalCoefficient = 0;
             semester.Unit.forEach((unit: Unit) => {
@@ -251,8 +240,31 @@ export default defineEventHandler(async (event) => {
             } else {
                 semester.average = unitTotal / unitTotalCoefficient;
             }
-        });
-    });
+            const semesterModifiers = await prisma.userSemester.findMany(
+                {
+                    select: {
+                        bonus: true,
+                        malus: true
+                    },
+                    where: {
+                        idUser: payload.user_id,
+                        idSemester: semester.id
+                    }
+                }
+            );
+            if (semesterModifiers.length > 0) {
+                if (semesterModifiers[0].bonus !== null) {
+                    semester.bonus = semesterModifiers[0].bonus;
+                }
+                if (semesterModifiers[0].malus !== null) {
+                    semester.malus = semesterModifiers[0].malus;
+                }
+            } else {
+                semester.bonus = 0;
+                semester.malus = 0;
+            }
+        }));
+    }));
 
     setResponseStatus(event, 200, 'User data');
     return {user, userAcademicYears};

@@ -37,6 +37,8 @@ export default defineEventHandler(async (event) => {
         updateData.malus = body.malus;
     }
 
+    console.log(updateData)
+
     const userSemester = await prisma.userSemester.findMany({
         where: {
             idUser: user.id,
@@ -44,13 +46,13 @@ export default defineEventHandler(async (event) => {
         }
     })
 
-    if (!userSemester){
+    if (!userSemester.length){
         const userSemesterCreated = await prisma.userSemester.create({
             data: {
                 idUser: user.id,
                 idSemester: body.id_semester,
-                bonus: body.bonus,
-                malus: body.malus
+                bonus: body.bonus ?? 0,
+                malus: body.malus ?? 0
             }
         })
         if (!userSemesterCreated){
