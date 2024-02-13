@@ -5,7 +5,7 @@
         :average="value"
       />
       <span class="font-light text-xs">
-        Coefficient {{ coef.toFixed(1) }}
+        Coefficient {{ coef.toFixed(2) }}
       </span>
     </div>
     <EditLevelsButtons

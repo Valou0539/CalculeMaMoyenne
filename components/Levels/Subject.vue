@@ -86,10 +86,11 @@
               <button
                   v-if="editGradeGroupId"
                   @click.prevent="
-                  gradeGroupName = null;
-                  gradeGroupCoef = null;
-                  editGradeGroupId = null;
-                "
+                    gradeGroupName = null;
+                    gradeGroupCoef = null;
+                    editGradeGroupId = null;
+                  "
+                  type="reset"
                   class="bg-secondary-button dark:bg-secondary-button-dark text-secondary-button-text dark:text-secondary-button-text-dark p-1 rounded"
               >
                 <Icon style="display: block" name="maki:cross" size="20px" />

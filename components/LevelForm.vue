@@ -33,6 +33,7 @@
             id = null;
             $emit('reloadLevels')
           "
+          type="reset"
           class="bg-secondary-button dark:bg-secondary-button-dark text-secondary-button-text dark:text-secondary-button-text-dark px-4 py-2 rounded"
       >
         <Icon name="maki:cross" size="26px" />

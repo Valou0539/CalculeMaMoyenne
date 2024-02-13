@@ -52,7 +52,7 @@
             <input
                 v-model="gradeCoef"
                 type="number"
-                step="0.5"
+                step="0.05"
                 min="0"
                 :id="'grade' + id + 'Coef'"
                 class="border border-accent py-1 px-2 w-14 border-none bg-secondary-button dark:bg-secondary-button-dark text-secondary-button-text dark:text-secondary-button-text-dark"
@@ -66,6 +66,7 @@
                   gradeCoef = 1;
                   editGradeId = null;
                 "
+                type="reset"
                 class="bg-secondary-button dark:bg-secondary-button-dark text-secondary-button-text dark:text-secondary-button-text-dark p-1 rounded"
             >
               <Icon style="display: block" name="maki:cross" size="20px" />
