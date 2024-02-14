@@ -7,12 +7,22 @@ async function isAuthenticated(token: string | null): Promise<AuthenticationResu
     if (!token) {
         return { role: 'unauthenticated', authenticated: false };
     }
-    const response : {role?: string | undefined, error?: string | undefined} = await $fetch('/api/user/authorization', {
-        method: 'GET',
-        headers: {
-            'Authorization': token
-        }
-    });
+
+    let response: {role?: string | undefined, error?: string | undefined};
+
+    try {
+        response = await $fetch('/api/user/authorization', {
+            method: 'GET',
+            headers: {
+                'Authorization': token
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching authorization:', error);
+        useAuthStore().setToken(null);
+        return { role: 'unauthenticated', authenticated: false };
+    }
+
     return response.role ? { role: response.role, authenticated: true } : { role: 'unauthenticated', authenticated: false };
 }
 

@@ -16,7 +16,7 @@ export function generateAuthToken(payload: UserObject): string {
     if (!secretKey){
         throw new Error('Secret key is not defined')
     }
-    return jwt.sign(payload, secretKey, {expiresIn: '1h'})
+    return jwt.sign(payload, secretKey, {expiresIn: '2h'})
 }
 
 export function verifyToken(token: string | null): JwtPayload | null {
